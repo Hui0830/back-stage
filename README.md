@@ -6,7 +6,7 @@ master分支：生产环境的稳定分支，代码最权威，随时可发布�
 feature分支：功能开发分支，用于较大的功能开发。
 release分支：测试分支，用于feature测试。
 hotfix分支：紧急修改分支，用于少量代码的修改、发布。
-
+xxxx分支：其他用于test无关分支。
 ## 二、流程
 - 开发新功能：
 1. 从 master 拉取处 feature 分支，在feature分支完成开发和自测

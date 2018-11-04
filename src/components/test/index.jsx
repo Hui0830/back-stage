@@ -10,6 +10,11 @@ import {getValidDateInfo, getSkuInfo} from 'Api/store';
  * 3、通过then链式回调（好难看）
  * 4、父组件获取A并传给子组件
 */
+const storeItemIdMap = {
+    1: 222, // 其他
+    2: 223, // 基础版
+    3: 224, // 专业版
+}
 let a = 0;
 export default class Test extends Component {
     state = {
@@ -28,8 +33,8 @@ export default class Test extends Component {
             loading: true,
         })
         getValidDateInfo().then((data) => {
-            // console.log(data);
-            const isAdvancedStore = data.serviceVersion == 20;
+            // isAdvancedStore是否是专业版
+            const isAdvancedStore = data.serviceVersion == 3;
             this.setState({
                 isAdvancedStore,
                 name: data.name,

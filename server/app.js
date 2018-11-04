@@ -25,8 +25,7 @@ app.use(koaBody({ jsonLimit: REQUEST_LIMIT, formLimit: REQUEST_LIMIT, textLimit:
 router.get('/api/reqInfo',(ctx) => {
         ctx.response.type = 'json';
         ctx.response.body= {
-            serviceVersion: 20,
-            name:'koa靓旗店',
+            serviceVersion: 3,
         }
 });
 router.post('/api/getSkuInfo', (ctx) => {

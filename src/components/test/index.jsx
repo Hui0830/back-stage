@@ -19,64 +19,57 @@ let a = 0;
 export default class Test extends Component {
     state = {
         loading: false,
-        itemId: 223,
-        isAdvancedStore: false,
+        itemId: 223, // 默认为基础版
+        isAdvancedStore: false, // 是否是专业版
     }
-
     componentDidMount() {
         this.getValidDateInfo();
-        
+        // this.getSkuInfo();
     }
-
     getValidDateInfo = () => {
         this.setState({
             loading: true,
         })
         getValidDateInfo().then((data) => {
-            // isAdvancedStore是否是专业版
+            // isAdvancedStore是否是专业版,这里设置后端返回的都是专业版code
             const isAdvancedStore = data.serviceVersion == 3;
             this.setState({
                 isAdvancedStore,
-                name: data.name,
                 loading: false,
+                ...data,
             })
-        }).then(() => this.getSkuInfo());
+        }).then(() => {
+            this.getSkuInfo();
+        });
     }
 
     getSkuInfo = () => {
-        let itemId;
-        this.setState((state) => {
-            console.info(state);
-            itemId = state.isAdvancedStore ? 224 : 223;
-            return {
-                loading: true,
-            }
-        })
+        this.setState({loading: true,})
+        const itemId = this.state.isAdvancedStore ? 224 : 223;
+        // itemId为223取到的是基础版数据，224为专业版
         getSkuInfo({itemId}).then((d) => {
-            this.setState((state) => {
-                console.log(state);
-                return {
-                ...d,
-                }
+            this.setState({
+                name: d.name,
+                price: d.price,
+                loading: false,
             })
         })
     }
 
     render() {
-        const { isAdvancedStore, name, content } = this.state;
+        const { isAdvancedStore, name, price } = this.state;
         return (
             <div>
                 {
-                    !isAdvancedStore ? <h2>基础店铺展示</h2> : <h2>专业店铺展示</h2>
+                    isAdvancedStore ? <h2>专业版店铺</h2> : <h2>基础版店铺</h2>
                 }
-                <p>{name}</p>
                 <div>
                     <h2>
                         {name}
-                        {a++}
                     </h2>
-                    <p>{content}</p>
+                    <p>订购价格：{price}</p>
                 </div>
+                <p>render方法调用次数：{++a}</p>
             </div>
         )
     }

@@ -32,12 +32,12 @@ router.post('/api/getSkuInfo', (ctx) => {
     const {itemId} = ctx.request.body;
     ctx.response.type = 'json';
     let data = {
-        content: 'ffdafdfdfafaf',
+        price: '5000$',
         name: 'koa靓旗店（基础版）',
     }
     if(itemId == 224){
         data = {
-            content: '分开后的开发和',
+            price: '8000$',
             name: 'koa靓旗店(专业版)', 
         }
     }

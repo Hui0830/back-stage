@@ -194,13 +194,6 @@ class Plan extends React.Component {
                     }
                 </div>
                 <Introduction type={type} />
-                <ul>
-                    <li>1</li>
-                    <li>1</li>
-                    <li>1</li>
-                    <li>1</li>    
-                </ul>
-                <span>ddddd</span><span>al了解阿里国aal了解阿里国家栋梁家啊l了解阿里国家栋梁家啊家栋梁家啊</span>
             </div>
         );
     }

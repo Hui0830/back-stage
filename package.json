@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "webpack-dev-server  --progress --colors --profile --config ./webpack.dev.js",
+    "proBuild": "webpack --progress --colors --config ./webpack.prod.js",
     "server": "nodemon ./server/app.js"
   },
   "repository": {
@@ -26,6 +27,7 @@
     "koa-body": "^4.0.4",
     "koa-favicon": "^2.0.1",
     "koa-router": "^7.4.0",
+    "koa-static": "^5.0.0",
     "koa-view": "^2.1.1",
     "react": "^16.6.0",
     "react-dom": "^16.6.0",
@@ -47,14 +49,19 @@
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
     "cache-loader": "^1.2.5",
+    "clean-webpack-plugin": "^1.0.0",
+    "copy-webpack-plugin": "^4.6.0",
     "css-loader": "^1.0.1",
     "file-loader": "^2.0.0",
     "html-webpack-plugin": "^3.2.0",
+    "mini-css-extract-plugin": "^0.4.5",
     "node-sass": "^4.9.4",
     "nodemon": "^1.18.5",
+    "optimize-css-assets-webpack-plugin": "^5.0.1",
     "postcss-loader": "^3.0.0",
     "sass-loader": "^7.1.0",
     "style-loader": "^0.23.1",
+    "url-loader": "^1.1.2",
     "webpack": "^4.23.1",
     "webpack-cli": "^3.1.2",
     "webpack-merge": "^4.1.4"

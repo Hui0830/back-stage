@@ -57,7 +57,7 @@ export default class MyLayout extends React.Component {
                             !collapsed ? <img src={logo} /> : <PandaIcon style={{ fontSize: '32px' }} />
                         }
                     </div>
-                    <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
+                    <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" style={{ marginBottom: 48 }}>
                         {
                             Object.keys(menu).map(key => {
                                 if(menu[key]["subMenu"]) {

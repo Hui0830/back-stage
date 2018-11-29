@@ -5,15 +5,13 @@ import {
 	Redirect
 } from 'react-router-dom'
 import NotFound from '../not_found_page'
+import Dashboard from '../dashboard'
 import staff from './routes/staff';
-// import Home from '../../pages/Home'
-// import About from '../../pages/AboutAs/about'
-// import Information from '../../pages/Information/information'
-// import JoinPage from '../../pages/Joinpage/joinAs'
-// import News from '../../pages/News/news'
-// import Products from '../../pages/Products/product'
-// import Service from '../../pages/Service/service'
-// import NotFound from '../../pages/404Page/notfound'
+import news from './routes/news';
+import recruit from './routes/recruit';
+import stuff from './routes/stuff';
+import website from './routes/website';
+import article from './routes/article';
 
 const routes = [
 	{
@@ -21,11 +19,19 @@ const routes = [
 		render: () => <Redirect to = "/dashboard" />,
 		exact: true,
 	},
-    ...staff,
+	...staff,
+	...news,
+	...recruit,
+	...stuff,
+	...website,
+	...article,
 ]
 
 // 传入404配置页面
 routes.push({
+	path: '/dashboard',
+	component: Dashboard,
+},{
     path: '*',
     component: NotFound
 })

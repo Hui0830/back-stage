@@ -119,7 +119,11 @@ const menu = {
         },
     }
 }
-const breadcrumbMap = {};
+const breadcrumbMap = {
+    '/staff/edit': '员工编辑',
+    '/staff/:id': '员工详情',
+    '/article/:id': '文章详情',
+};
 Object.keys(menu).forEach(key => {
     const {subMenu, href, text} = menu[key];
     if(href === '/dashboard') return;

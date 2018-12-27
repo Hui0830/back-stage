@@ -3,6 +3,7 @@ const path = require('path');
 module.exports = {
     entry: {
         index: path.resolve(__dirname, './index.js'),
+        // login: path.resolve(__dirname, './src/login/index.jsx'),
     },
     resolve: {
 		extensions: [".js",".jsx"],
@@ -26,15 +27,10 @@ module.exports = {
                     minChunks: 2,
                     minSize: 0,
                 },
-                styles: {
-                    name: 'styles',
-                    test: /\.scss$/,
-                    chunks: 'all',
-                    enforce: true,
-                },
                 vendor: {
-                    test: /node_moudules/,
+                    test: /node_modules/,
                     chunks: 'initial',
+                    name: "vendor",
                     priority: 10,
                     enforce: true,
                 }

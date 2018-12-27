@@ -1,0 +1,25 @@
+:local(.style) {
+
+    .filter-container {
+        display: flex;
+        justify-content: space-between;
+        margin: 30px 0;
+    }
+    .time {
+        border: 2px dotted #f7a8a9;
+        display: flex;
+        flex-direction: column;
+        font-size: 16px;
+        padding: 10px;
+        text-align: center;
+        color: #a1d8f3;
+        span:first-child {
+            font-size: 14px;
+            color: #faad14
+        }
+
+    }
+    .select-filter {
+        min-width: 200px;
+    }
+}

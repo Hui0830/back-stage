@@ -90,21 +90,31 @@ let config = merge(baseWebpackConfig, {
 });
 
 /*生成html文件*/
-	let cof = {
-		filename:  'index.html',
+const getHtml = {
+		filename:  `index.html`,
 		template: 'index.html',
-		inject: true,
+		inject: 'body',
 		title: "星婴美",
 		minify: {
 			removeComments: true,
 			collapseWhitespace: true,
 			removeAtrributeQuotes: true
 		},
-		chunks: '*',
+		chunks: ['manifest', 'vendor','index'],
 		hash: false,
 		chunksSortMode: 'dependency'
-	};
-	config.plugins.push(new HtmlWebpackPlugin(cof))
+};
+//配置页面
+// const htmlArray = [{
+// 	_html: 'index',
+// 	title: '首页',
+// 	chunks: ['*']//页面用到的vendor模块
+//    },
+// ];
+//自动生成html模板
+// htmlArray.forEach((element) => {
+	config.plugins.push(new HtmlWebpackPlugin(getHtml));
+// })
 
 /*清除dist文件夹*/
 config.plugins.push(new cleanWebpackPlugin([webpackFile.proDirectory],{

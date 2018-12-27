@@ -1,0 +1,50 @@
+:local(.style) {
+    padding: 20px;
+    
+    .header {
+        border-bottom: 1px solid #eee;
+        padding-bottom: 20px;
+        .header-title {
+            font-size: 1.5em;
+            color: #000;
+            margin-right: 20px;
+            vertical-align: middle;
+        }
+        .delete-btn {
+            box-shadow: 1px 0 3px #cccccc;
+            cursor: pointer;
+            padding: 0 10px;
+            &:hover {
+                background: #eee;
+            }
+        }
+    }
+
+    .item {
+        border-bottom: 1px solid #eee;
+        padding: 10px 0;
+        .item-title {
+            display: flex;
+            justify-content: left;
+            .item-heater {
+                color: #009a61;
+                border:1px solid transparent;
+                &:hover {
+                    border-bottom: 1px solid;
+                    color: #004e31;
+                }
+            }
+        }
+        .item-bottom {
+            display: flex;
+            justify-content: space-between;
+            .edit-btn {
+                color: #009a61;
+                margin-left: 10px;
+            }
+            .delete-span {
+                cursor: pointer;
+            }
+        }
+    }
+}

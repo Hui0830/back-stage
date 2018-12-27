@@ -4,16 +4,21 @@ import { Breadcrumb, Icon } from 'antd';
 
 
 export const XYMBreadcrumb = withRouter((props) => {
-  const { location, breadcrumbNameMap } = props;
-  const pathSnippets = location.pathname.split('/').filter(i => i);
-
-  const extraBreadcrumbItems = pathSnippets.map((_, index) => {
-    const url = `/${pathSnippets.slice(0, index + 1).join('/')}`;
+  const { match, breadcrumbNameMap } = props;
+  console.warn(match.path);
+  const paths = match.path.split('/').filter(i => i);
+  console.log(paths,location);
+  const extraBreadcrumbItems = paths.map((path, index) => {
+    const url = `/${paths.slice(0, index + 1).join('/')}`;
     return (
       <Breadcrumb.Item key={url}>
-        <Link to={url}>
-          {breadcrumbNameMap[url]}
-        </Link>
+        {
+          (index+1 == paths.length || index === 0) ?
+          <span>{breadcrumbNameMap[url]}</span> :
+          <Link to={url}>
+            {breadcrumbNameMap[url]}
+          </Link>
+        }
       </Breadcrumb.Item>
     );
   });
@@ -25,7 +30,7 @@ export const XYMBreadcrumb = withRouter((props) => {
   )].concat(extraBreadcrumbItems);
 
   return (
-      <Breadcrumb style={{lineHeight: '2em'}}>
+      <Breadcrumb style={{lineHeight: '2em',background: '#F8F8F8',paddingLeft: '24px'}}>
         {breadcrumbItems}
       </Breadcrumb>
   );

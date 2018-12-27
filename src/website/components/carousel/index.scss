@@ -1,0 +1,43 @@
+:local(.style) {
+    position: relative;
+    overflow: hidden;
+    .carousel-warp {
+        display: flex;
+        transition: all .3s ease-in-out;
+        border: 1px solid red;
+        .carousel-item {
+            width: 100%;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+    .carousel-icon {
+        height: 20px;
+        line-height: 20px;
+        text-align: right;
+        padding-right: 20px;
+        position: absolute;
+        bottom: 10px;
+        right: 0;
+        width: 100%;
+        .tab {
+            display: inline-block;
+            margin-right: 10px;
+            height: 8px;
+            width: 8px;
+            border-radius: 4px;
+            border: 1px solid #FBAB0A;
+            transition: all .3s ease-in-out;
+        }
+        .activeTab{
+            background: #FBAB0A;
+        }
+    }
+    &:hover {
+        .carousel-icon {
+            background: rgba(#000, 0.4)
+        }
+    }
+}

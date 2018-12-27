@@ -1,0 +1,41 @@
+@import './var.scss';
+
+.outline-btn {
+    display: inline-block;
+    padding: 2px 10px;
+    background-color: transparent;
+    border: 1px solid $c-theme;
+    border-radius: 2px;
+}
+.btn-style {
+    display: inline-block;
+    padding: 2px 10px;
+    background-color: $c-theme;
+    border-radius: 2px;
+}
+
+// 左右行内布局
+.row {
+    line-height: 20px;
+    padding-bottom: 30px;
+    .col-l {
+        text-align: right;
+        min-width: 90px;
+        padding-right: 18px;
+        display: inline-block;
+    }
+    .col-r {
+        color: #5a5a5a;
+        text-align: left;
+        font-size: 16px;
+        display: inline-block;
+        width: 300px;
+    }
+}
+// antd样式调整
+textarea {
+    vertical-align: top;
+}
+.ant-message {
+    text-align: center;
+}

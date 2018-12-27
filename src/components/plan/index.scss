@@ -1,181 +1,39 @@
-@import "../../sass/var";
-
-.plan-container {
-    display: inline-block;
-    width: 300px;
-    padding-bottom: 10px;
-    background: #FFFFFF;
-    box-shadow: 0 0 10px 0 rgba(189,189,189,0.50);
-    border-radius: 4px;
-    text-align: center;
-    vertical-align: top;
-
-    .plan-top {
-        padding-bottom: 20px;
-    }
-
-    .plan-head {
-        font-size: 24px;
-        color: $menu-title;
-        justify-content: center;
-        display: flex;
-        flex-direction: column;
-        padding-top: 25px;
-        align-items: center;
-        color: #FFFFFF;
-
-        .small-head {
-            font-size: 16px;
-            margin-top: 50px;
+:local(.style) {
+    position: relative;
+    overflow: hidden;
+    transition: all .3s ease-in-out;
+    border: 1px dashed transparent;
+    // display: inline-block;
+    cursor: pointer;
+    .plan-edit {
+        visibility: hidden;
+        position: absolute;
+        color: #f2f2f2;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background: rgba(0, 0, 0, 0.3);
+        height: 20px;
+        line-height: 20px;
+        text-align: right;
+        padding-right: 6px;
+        transition: all .3s ease-in;
+        .close {
+            margin-left: 10px;
+            &:hover {
+                color: #ff7161;
+            }
         }
-    }
-    .title {
-        font-size: 22px;
-        color: #FFFFFF;
-        padding-top: 15px;
-        text-align: center
-    }
-
-    .hotline {
-        margin-top: 26px;
-        padding-bottom: 10px;
-    }
-
-    .discount {
-        font-size: 12px;
-        background-color: #FFC65F;
-        color: #fff;
-        border-radius: 3px;
-        margin: 0 2px;
-    }
-
-    .buy {
-        margin-top: 15px;
-        font-size: 22px;
-        color: #fff;
-    }
-
-    .btn-buy {
-        width: 160px;
-        height: 30px;
-        margin-top: 20px;
-        background: #FFFFFF;
-        color: #666666;
-        border: none;
-        border-radius: 2px;
-    }
-
-    .sep-line {
-        background: $nav-border;
-        height: 1px;
-        width: 260px;
-        margin: 20px auto;
-    }
-
-    .detail {
-        font-size: 12px;
-        color: $c-gray;
-        padding-top: 20px;
-        // margin-left: 23px;
-        list-style-position: inside;
-        li {
-            // display: flex;
-            list-style-type: disc;
-            justify-content: space-between;
-            align-items: center;
-            text-align: left;
-            line-height: 3em;
-            padding-right: 10px;
-            .detail-item{
-                display: flex;
-                flex: 1;
-                align-items: center;
-                justify-content: space-between;
-                .check{
-                    position: relative;
-                    display: inline-block;
-                    width: 16px;
-                    height: 15px;
-                    margin: 0 10px;
-                    &::after{
-                        content: "";
-                        position: absolute;
-                        left:0;
-                        width: 100%;
-                        height: 50%;
-                        border: 2px solid #000;
-                        border-radius: 1px;
-                        border-top: none;
-                        border-right: none;
-                        background: transparent;
-                        transform: rotate(-45deg);
-                    }
-                }
+        .edit {
+            :hover {
+                color: blue;
             }
         }
     }
-
-    .color-black {
-        color: black;
-    }
-
-    .bg-1 {
-        background-color: #F7A6BD;
-    }
-    .bg-2 {
-        background-color: #EB7C9A;
-    }
-    .bg-3 {
-        background-color: #8289A5;
-    }
-
-    .tip {
-        padding: 0 10px;
-        border-radius: 20px;
-        line-height: 20px;
-        font-size: 14px;
-        color: #fff;
-        height: 20px;
-        text-align: center;
-        margin-left: 10px;
-    }
-    .tip-1 {
-        background-color: #7F7BE7
-    }
-    .tip-2 {
-        background-color: #f2b944
-    }
-    .tip-3 {
-        background-color: #e67092
-    }
-
-    // 基础版方案选择
-    .buy-item {
-        border: 1px solid #fff;
-        padding: 10px 0px;
-        margin: 10px 20px;
-        border-radius: 3px;
-        cursor: pointer;
-    }
-    .item-actived {
-        border: 1px solid #e85881;
-        position: relative;
-        &::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            width: 0;
-            height: 0;
-            border-width: 5px;
-            border-style: solid;
-            border-color:transparent #e85881 #e85881 transparent
+    &:hover {
+        border: 1px dashed #ff7161;
+        .plan-edit {
+            visibility: visible;
         }
-    }
-    .close {
-        text-align: center;
-        color: #e85881;
-        padding: 20px 0 0;
-        cursor: pointer;
     }
 }

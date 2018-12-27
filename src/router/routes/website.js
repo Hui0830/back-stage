@@ -1,4 +1,5 @@
 import Website from '../../website'
+import SeoEdit from '../../website/seo';
 
 export default [{
     path: '/website',
@@ -9,5 +10,5 @@ export default [{
     component: Website,
 }, {
     path: '/website/seo',
-    component: Website,
+    component: SeoEdit,
 }];

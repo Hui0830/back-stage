@@ -1,6 +1,12 @@
 import React, {Component} from 'react'
+import { Link } from 'react-router-dom'
 import Test from 'components/test'
-import Plan from 'components/plan'
+// import Plan from 'components/plan'
+import FilterSearch from './components/staff_filter';
+import { ROLE_NAME } from 'common/conf/constant';
+import { Table } from 'antd'
+
+require('./index.scss');
 
 let onePrice = 5000;
 let fivePrice = 175000;
@@ -14,12 +20,71 @@ const priceArray = [
         price: fivePrice,
     },
 ];
+const dataSource = [{
+    key: '1',
+    acount: '123444444',
+    name: '胡彦斌',
+    roleName: '管理员',
+    tel: '123444444',
+    time: '西湖区湖底公园1号'
+  }, {
+    key: '2',
+    acount: '123444444',
+    name: '胡彦斌',
+    roleName: '管理员',
+    tel: '123444444',
+    time: '西湖区湖底公园1号'
+  }];
+  
+  const columns = [{
+    title: '系统账号',
+    dataIndex: 'acount',
+    key: 'acount',
+  }, {
+    title: '姓名',
+    dataIndex: 'name',
+    key: 'name',
+  }, {
+    title: '职位',
+    dataIndex: 'roleName',
+    key: 'roleName',
+  }, {
+    title: '联系方式',
+    dataIndex: 'tel',
+    key: 'tel',
+  }, {
+    title: '添加时间',
+    dataIndex: 'time',
+    key: 'time',
+  }, {
+    key: 'action',
+    title: '操作',
+    render: (val) => {
+        console.log(val);
+        return <div className='action'>
+            <Link to={`/staff/edit/${val.acount}`} className="outline-btn edit-a">编辑</Link>
+            <Link to={`/staff/${val.acount}`} className="btn-style search-a">查看</Link>
+        </div>
+    }
+  }];
+  
+  
+const filterData = {
+    filterData: ROLE_NAME.map(v => {return { filterId: v.roleId, filterTip: v.roleName }}),
+    lable: '角色',
+    searchTip: '输入用户名或手机号',
+}
 export default class Staff extends Component {
+    onSearch = ({ keyWord, filterId }) => {
+        console.log(keyWord, filterId)
+    }
     render() {
         return [
+            <FilterSearch {...filterData} onSearch={this.onSearch}  />,
+            <Table dataSource={dataSource} columns={columns} />,
             <Test />,
             <div className="plans">
-                <Plan
+                {/* <Plan
                     name="基础版"
                     icon="discount"
                     priceArray={priceArray}
@@ -28,7 +93,7 @@ export default class Staff extends Component {
                     type="1"
                 />
                 <Plan name="专业版" money={fivePrice} icon="multi-store" className="advanced sep" type="2" />
-                <Plan name="灵活方案" money="0" icon="multi-store" type="3" />
+                <Plan name="灵活方案" money="0" icon="multi-store" type="3" /> */}
             </div>
         ]
     }

@@ -1,12 +1,13 @@
 import React from 'react';
-import { Layout, Menu, Breadcrumb, Icon } from 'antd';
+import { Layout, Menu, Icon } from 'antd';
 import {
     Link,
+    withRouter,
   } from 'react-router-dom';
 import { XYMBreadcrumb } from '../breadcrumb';
 import menu, { breadcrumbNameMap } from '../../common/conf/menu';
 import logo from  '../../images/favicon.png';
-require('./index.scss');
+import { style }  from './index.scss';
 const { Header, Content, Footer, Sider } = Layout;
 const SubMenu = Menu.SubMenu;
 
@@ -27,9 +28,10 @@ const PandaSvg = () => (
   );
 
 
-export default class MyLayout extends React.Component {
+class MyLayout extends React.Component {
     state = {
         collapsed: false,
+        openKeys: [this.props.location.pathname.split('/')[1]],
       };
     
       onCollapse = (collapsed) => {
@@ -40,36 +42,49 @@ export default class MyLayout extends React.Component {
           collapsed: !this.state.collapsed,
         });
       }
-
       render() {
-        const { collapsed } = this.state;
+        const { collapsed,openKeys } = this.state;
         const marginLeft = !collapsed ? '200px' : '80px';
+        const { pathname } = this.props.location;
+        const defaultOpenKey = pathname.split('/')[1];
+        // const afterKeys = openKeys.length ? openKeys : [defaultOpenKey];
+        // console.log(pathname.split('/'));
         return (
-            <Layout style={{ minHeight: '100vh' }}>
+            <Layout className={style}>
                 <Sider
                 collapsible
                 collapsed={collapsed}
                 onCollapse={this.onCollapse}
                 style={{ overflow: 'auto', height: '100vh', position: 'fixed', left: 0 }}
+                theme="light"
                 >
                     <div className="logo">
                         {
                             !collapsed ? <img src={logo} /> : <PandaIcon style={{ fontSize: '32px' }} />
                         }
                     </div>
-                    <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" style={{ marginBottom: 48 }}>
+                    <Menu
+                        theme="light"
+                        defaultSelectedKeys={[`${pathname}`]}
+                        selectedKeys={[`${pathname}`]}
+                        defaultOpenKeys={[`${defaultOpenKey}`]}
+                        openKeys={openKeys}
+                        mode="inline"
+                        style={{ marginBottom: 48 }}
+                        onOpenChange={(openKeys) => {this.setState({openKeys})}}
+                    >
                         {
                             Object.keys(menu).map(key => {
                                 if(menu[key]["subMenu"]) {
-                                    return (
+                                    return ( 
                                         <SubMenu
-                                            key={key}
+                                            key={menu[key].key}
                                             title={<span><Icon type={menu[key].icon} /><span>{menu[key].text}</span></span>}
                                             >
                                             {
                                                 Object.keys(menu[key]["subMenu"]).map((item, index) => {
                                                     return (
-                                                        <Menu.Item key={`${menu[key].mid}_${item}`}>
+                                                        <Menu.Item key={`/${menu[key]["subMenu"][item].href}`}>
                                                             <Link to = {`/${menu[key]["subMenu"][item].href}`} >{menu[key]["subMenu"][item].name} </Link>
                                                         </Menu.Item>
                                                     )
@@ -80,7 +95,7 @@ export default class MyLayout extends React.Component {
                                     )
                                 } else {
                                     return (
-                                        <Menu.Item key={key}>
+                                        <Menu.Item key={menu[key].href}>
                                             
                                             <Link to = {menu[key].href} >
                                                 <Icon type="pie-chart" />
@@ -103,7 +118,7 @@ export default class MyLayout extends React.Component {
                             />
                         <PandaIcon style={{ fontSize: '32px', float: 'right', margin: '16px' }} />
                     </Header>
-                    <Content style={{ margin: '0 16px' }}>
+                    <Content>
                         <XYMBreadcrumb breadcrumbNameMap={breadcrumbNameMap} />
                         <div style={{ padding: 24, background: '#fff', minHeight: '80vh' }}>
                             {
@@ -111,7 +126,7 @@ export default class MyLayout extends React.Component {
                             }
                         </div>
                     </Content>
-                    <Footer style={{ textAlign: 'center' }}>
+                    <Footer>
                         liwenhui ©2018 Created by 2018-11-27
                     </Footer>
                 </Layout>
@@ -119,3 +134,7 @@ export default class MyLayout extends React.Component {
         )
     }
 }
+
+export default  withRouter((props) => {
+    return <MyLayout {...props} />
+})

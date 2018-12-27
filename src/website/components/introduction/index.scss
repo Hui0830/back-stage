@@ -1,0 +1,39 @@
+:local(.style) {
+    text-align: center;
+    .title-container {
+        width: 180px;
+        height: 60px;
+        border-bottom: 1px solid #ccc;
+        margin: 0 auto;
+        .title {
+            display: inline-block;
+            width: 100px;
+            border-bottom: 1px solid #dadada;
+            height: 50px;
+            line-height: 50px;
+        }
+    }
+    .container {
+        min-height: 300px;
+        width: 980px;
+        margin: 50px auto;
+        display: flex;
+        justify-content: center;
+        .descript {
+            width: 400px;
+            background: #FBAB0A;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            text-align: left;
+            text-indent: 2em;
+            line-height: 2em;
+        }
+        .img {
+            flex: 1;
+            overflow: hidden;
+            background-position: center;
+            background-size: cover;
+        }
+    }
+}

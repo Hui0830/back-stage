@@ -20,7 +20,9 @@ let config = merge(baseWebpackConfig,{
 	devtool: '#cheap-module-eval-source-map',
 	plugins: [
 		new HtmlWebpackPlugin({
-			template:path.resolve(__dirname,'./index.html')
+			template:path.resolve(__dirname,'./index.html'),
+			inject: 'body',
+			favicon: './src/images/favicon.ico',
 		}),
 		/*设置热更新*/
 		new webpack.HotModuleReplacementPlugin(),
@@ -48,7 +50,8 @@ let config = merge(baseWebpackConfig,{
 				],
 				include:[
 					path.resolve(__dirname,'src'),
-					path.join(__dirname, './node_modules/antd')
+					path.join(__dirname, './node_modules/antd'),
+					path.join(__dirname, './node_modules/react-draft-wysiwyg')
 				]
 			},
 			{

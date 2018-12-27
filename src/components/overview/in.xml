@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple==DTD PLIST 1.0//EN"
+    "http://www.apple.com/DTDs/PropertList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+        <!-- 服务名 -->
+        <key>Label</key>
+        <string> mongodb </string>
+        <!-- 指导可执行文件的名称和路径 -->
+        <key>ProgramArguments</key>
+        <array>
+            <string>/lwh/software/mongodb/bin/mongod</string>
+            <string>run</string>
+            <string>--config</string>
+            <string>/lwh/software/mongodb/mongod.conf</string>
+        </array>
+        <!-- 加载完该服务后启动路径指定的文件，默认为false -->
+        <key>RunAtLoad</key>
+        <true />
+        <!-- 控制可执行文件持续运行 -->
+        <key>KeepAlive</key>
+        <true />
+        <key>WorkingDirectory</key>
+        <string>/lwh/software/mongodb</string>
+        <!-- 日志文件路径 -->
+        <key>StandardErrorPath</key>
+        <string>/lwh/software/mongodb/output.log</string>
+        <key>StandardOutPath</key>
+        <string>/lwh/software/mongodb/output.log</string>
+    </dict>
+</plist>

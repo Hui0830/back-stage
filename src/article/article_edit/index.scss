@@ -1,0 +1,45 @@
+:local(.style) {
+    margin: 0;
+    .tip-title {
+        margin-top: 0;
+    }
+    .title,.description {
+        height: 50px;
+        background: #dadada;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        label {
+            width: 100px;
+            font-weight: bold;
+            text-align: center;
+        }
+        input {
+            height: 50px;
+            background: #f8f8f8;
+            font-size: 20px;
+        }
+    }
+    .description {
+        margin: 20px 0;
+        font-size: 14px;
+        label {
+            font-weight: initial;
+        }
+        input {
+            font-size: 14px;
+        }
+    }
+    .select-container {
+        margin: 40px 0;
+        .ant-select {
+            width: 200px;
+        }
+    }
+    .footer {
+        text-align: center;
+        button {
+            margin: 20px;
+        }
+    }
+}

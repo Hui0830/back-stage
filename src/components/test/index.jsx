@@ -31,6 +31,7 @@ export default class Test extends Component {
             loading: true,
         })
         getValidDateInfo().then((data) => {
+            console.log(data);
             // isAdvancedStore是否是专业版,这里设置后端返回的都是专业版code
             const isAdvancedStore = data.serviceVersion == 3;
             this.setState({

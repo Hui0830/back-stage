@@ -1,0 +1,44 @@
+:local(.style) {
+    .role-content {
+        background-color: #f8f8f8;
+        padding: 20px 0;
+
+        .role-table {
+            margin-left: 12.5%;
+            padding: 0 20px 0 10px;
+            th {
+                background-color: #c5c5c5;
+            }
+            tr {
+                background-color: #fff;
+            }
+        }
+    }
+    .basic-title {
+        background-color: #f8f8f8;
+        font-weight: bold;
+        margin: 20px 0;
+        padding: 10px;
+    }
+    .edit-pwd-btn {
+        margin-left: 10px;
+        color: #e74c75;
+        cursor: pointer;
+    }
+    .submit-btn {
+        margin-left: 12.5%;
+        margin-top: 50px;
+        button {
+            width: 100px;
+            margin-right: 80px;
+        }
+    }
+    input {
+        width: 250px;
+        margin-left: 10px;
+    }
+    textarea {
+        width: 300px;
+        margin-left: 10px;
+    }
+}

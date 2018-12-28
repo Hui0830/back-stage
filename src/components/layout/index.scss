@@ -1,0 +1,35 @@
+:local(.style) {
+    min-height: 100vh;
+    .logo {
+        height: 64px;
+        line-height: 64px;
+        font-size: 2em;
+        color: #ffffff;
+        text-align: center;
+        overflow: hidden;
+        margin: 10px;
+        img {
+            width: 100%;
+            height: auto;
+        }
+    }
+    .trigger {
+        font-size: 30px;
+        padding: 10px;
+    }
+    .ant-layout-sider-children {
+        border-right: 1px solid #e8e8e8;
+        overflow-y: scroll;
+        .ant-menu-inline {
+            border: none;
+        }
+       
+    }
+    .ant-layout-sider-trigger {
+        background: #f8f8f8;
+    }
+    .ant-layout-footer {
+        padding: 14px;
+        text-align: center;
+    }
+}

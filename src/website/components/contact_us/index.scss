@@ -1,0 +1,42 @@
+:local(.style){
+    background: #EEE;
+    display: flex;
+    justify-content: center;
+    padding: 50px 100px;
+    .left {
+        width: 300px;
+        padding-top: 100px;
+        .title {
+            &::before {
+                content: '';
+                display: block;
+                border: 2px solid #FBAB0A;
+                width: 30px;
+                margin-bottom: 15px;
+            }
+        }
+    }
+    .right {
+        width: 600px;
+        background: #fff;
+    }
+    .contact-form {
+        padding: 20px 40px;
+        .name {
+            display: flex;
+            justify-content: space-between;
+        }
+        .ant-form-item {
+            margin-bottom: 0
+        }
+        .ant-input {
+            border-radius: 0;
+            border-color: #FBAB0A;
+        }
+        button {
+            width: 150px;
+            background-color: #FBAB0A;
+            border-color: #FBAB0A
+        }
+    }
+}

@@ -1,0 +1,38 @@
+:local(.style) {
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    align-content: stretch;
+    div:first-child {
+        flex: 1;
+        text-align: center;
+        line-height: 2em;
+        .avatar {
+            height: 200px;
+            width: 200px;
+            border-radius: 50%;
+            margin: 0 auto;
+            background-position: center;
+            background-size: cover;
+        }
+    }
+    div:last-child {
+        flex: 2;
+        line-height: 2em;
+        padding: 0 70px;
+        .icon {
+            margin: 0;
+            color: #FBAB0A;
+            font-size: 50px;
+        }
+        .descript {
+            text-indent: 2em;
+            padding-left: 30px;
+        }
+        .title {
+            padding-left: 28px;
+            color: #000;
+            font-size: 20px;
+        }
+    }
+}

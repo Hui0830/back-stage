@@ -1,0 +1,32 @@
+:local(.style) {
+    .container {
+        height: 300px;
+        display: flex;
+        justify-content: center;
+
+        .item-a {
+            flex: 1;
+            text-align: center;
+            color: #939292;
+            font-size: 20px;
+            &:nth-child(1){
+                background: #EEEEEE;
+            };
+            &:nth-child(2){
+                background: #E5E5E5;
+            };
+            &:nth-child(3){
+                background: #DCDCDC;
+            }
+            .icon{
+                font-size: 80px;
+                line-height: 100px;
+                display: inline-block;
+                width: 100%;
+                height: 100px;
+                margin-top: 70px;
+                margin-bottom: 25px;
+            }
+        }
+    }
+}

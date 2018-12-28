@@ -1,0 +1,67 @@
+:local(.style) {
+    .top {
+        height: 50px;
+        line-height: 50px;
+        padding: 0 20px;
+        background: #f8f8f8;
+        .delete-all {
+            float: right;
+            cursor: pointer;
+        }
+    }
+    .content {
+        .new-item {
+            border: 1px solid #ebedf0;
+            padding: 10px;
+            margin-top: 20px;
+            position: relative;
+            i {
+                margin: 0 10px;
+            }
+            .header {
+                margin-bottom: 15px;
+                .name {
+                    color: rgba(0,0,0,0.45);
+                    i {
+                        color: #40a9ff;
+                    }
+                }
+                .time {
+                    color: #cccccc;
+                    font-size: 12px;
+                    margin: 0 20px;
+                }
+                .delete {
+                    visibility: hidden;
+                    color: red;
+                    transition: all 0.3s ease-in;
+                }
+            }
+            &:hover {
+                .delete {
+                    visibility: visible;
+                }
+            }
+            
+            .content {
+                padding: 0 24px;
+                text-indent: 2em;
+            }
+            .footer {
+                color: rgba(0,0,0,0.45);
+                padding: 0 24px;
+                .mail {
+                    i {
+                        color: #faad14
+                    }
+                }
+                .tel {
+                    i {
+                        color: #40a9ff
+                    }
+                }
+            }
+        }
+
+    }
+}

@@ -1,0 +1,52 @@
+:local(.style) {
+    position: relative;
+    .nav-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        min-width: 980px;
+        margin: 0 50px;
+        z-index: 1;
+        display: flex;
+        .nav-logo {
+            min-width: 60px;
+            height: 60px;
+            margin:10px;
+            img {
+                height: 60px;
+                width: auto;
+            }
+        }
+        .nav {
+            display: flex;
+            margin: 10px 0;
+            justify-content: center;
+            margin: 10px 0;
+            padding-right: 80px;
+            li {
+                list-style: none;
+                padding: 0 20px;
+                height: 60px;
+                line-height: 60px;
+                color: #000;
+                &:hover {
+                    color: #ff4d4f;
+                }
+
+            }
+        }
+        .nav-form-btn {
+            text-align: center;
+            display: flex;
+            justify-content: space-around;
+        }
+    }
+    .item {
+        height: 500px;
+        background: #ccc;
+        img {
+            height: 500px;
+            width: auto;
+        }
+    }
+}

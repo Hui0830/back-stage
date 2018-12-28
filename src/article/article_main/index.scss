@@ -1,0 +1,10 @@
+:local(.style) {
+    background: #f8f8f8;
+    padding: 20px;
+    min-height: 80vh;
+    .edit {
+        display: flex;
+        padding: 20px;
+        justify-content: space-around;
+    }
+}

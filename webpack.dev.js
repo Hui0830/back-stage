@@ -17,18 +17,12 @@ let config = merge(baseWebpackConfig,{
 		chunkFilename: 'js/[name].js',
 		publicPath: '/public/'
 	},
-	resolve: {
-		extensions: [".js",".jsx"],
-		alias: {
-			'components': path.resolve(__dirname,'./src/components'),
-			'common': path.resolve(__dirname, './src/common'),
-			'Api': path.resolve(__dirname, './src/common/api'),
-		}
-	},
 	devtool: '#cheap-module-eval-source-map',
 	plugins: [
 		new HtmlWebpackPlugin({
-			template:path.resolve(__dirname,'./index.html')
+			template:path.resolve(__dirname,'./index.html'),
+			inject: 'body',
+			favicon: './src/images/favicon.ico',
 		}),
 		/*设置热更新*/
 		new webpack.HotModuleReplacementPlugin(),
@@ -42,36 +36,10 @@ let config = merge(baseWebpackConfig,{
 					'cache-loader',//设置缓存
 					'babel-loader',				
 					],
-				// include: [
-				// 	path.resolve(__dirname,'../src'),
-					
-				// 	path.resolve(__dirname,'../../entryBuild')
-				// ],
 				exclude: [
 					path.resolve(__dirname,'../node_modules')
 				],
 			},
-			// {
-			// 	test: /\.(js|jsx)$/,
-			// 	enforce: 'pre',
-			// 	use: [
-			// 		{
-			// 			options: {
-			// 				formatter: eslintFormatter,
-			// 				eslintPath: require.resolve('eslint'),
-			// 				baseConfig: {
-			// 					extends: [require.resolve('eslint-config-react-app')],
-			// 				},
-			// 				useEslintrc: false,
-			// 			},
-			// 			loader: require.resolve('eslint-loader'),
-			// 		},
-			// 	],
-			// 	include: [
-			// 		path.resolve(__dirname,' ../../client')
-			// 	],
-			// 	exclude: [path.resolve(__dirname, '../../node_modules')]
-			// },
 			{
 				test: /\.(css|pcss|scss)$/,
 				use: [
@@ -79,10 +47,12 @@ let config = merge(baseWebpackConfig,{
 					'css-loader',
 					'postcss-loader',
 					'sass-loader'
-				],/*
-				exclude: /node_modules/,
-				include:path.join(__dirname, '/node_modules/antd'),*/
-
+				],
+				include:[
+					path.resolve(__dirname,'src'),
+					path.join(__dirname, './node_modules/antd'),
+					path.join(__dirname, './node_modules/react-draft-wysiwyg')
+				]
 			},
 			{
 				test: /\.(png|jpg|jpeg|gif|ttf|eot|woff|svg|woff2|swf)$/i,
@@ -93,13 +63,6 @@ let config = merge(baseWebpackConfig,{
 							name:'[path][name].[ext]'
 						}
 					},
-					/*{
-						loader: 'url-loader',
-						query: {
-							name: '[name].[ext]',
-							outputPath: webpackFile.resource
-						}
-					},*/
 				]
 			}
 		]

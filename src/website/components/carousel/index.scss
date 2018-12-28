@@ -1,0 +1,67 @@
+:local(.style) {
+    position: relative;
+    overflow: hidden;
+    .carousel-warp {
+        display: flex;
+        transition: all .3s ease-in-out;
+        border: 1px solid red;
+        .carousel-item {
+            width: 100%;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+    .carousel-icon {
+        height: 20px;
+        line-height: 20px;
+        padding-right: 20px;
+        position: absolute;
+        left: 0;
+        width: 100%;
+        .tab {
+            display: inline-block;
+            margin-right: 10px;
+            height: 8px;
+            width: 8px;
+            color: #FBAB0A;
+            border-radius: 4px;
+            border: 1px solid;
+            transition: all .3s ease-in-out;
+        }
+        .activeTab{
+            background: #FBAB0A;
+        }
+    }
+    .bottom-left {
+        text-align: left;
+        bottom: 10px;
+        padding-left: 20px;
+    }
+    .bottom-center {
+        text-align: center;
+        bottom: 10px;
+        left: 0;
+    }
+    .bottom-right {
+        text-align: right;
+        bottom: 10px;
+        padding-right: 20px;
+    }
+    .top-left {
+        text-align: left;
+        top: 10px;
+        padding-left: 20px;
+    }
+    .top-right {
+        text-align: right;
+        top: 10px;
+        padding-right: 20px;
+    }
+    &:hover {
+        .carousel-icon {
+            background: rgba(#000, 0.4)
+        }
+    }
+}

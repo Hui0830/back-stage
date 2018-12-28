@@ -5,6 +5,11 @@
     "stage-0"
   ],
   "plugins": [
-    "transform-react-jsx-source"
+      ["import", {
+        "libraryName": "antd",
+        "libraryDirectory": "es",
+        "style": "css"
+      }],
+      "transform-react-jsx-source"
   ]
 }

@@ -3,8 +3,17 @@ const path = require('path');
 module.exports = {
     entry: {
         index: path.resolve(__dirname, './index.js'),
+        // login: path.resolve(__dirname, './src/login/index.jsx'),
     },
-
+    resolve: {
+		extensions: [".js",".jsx"],
+		alias: {
+			'components': path.resolve(__dirname,'./src/components'),
+			'common': path.resolve(__dirname, './src/common'),
+			'utils': path.resolve(__dirname, './src/common/utils'),
+			'Api': path.resolve(__dirname, './src/common/api'),
+		}
+	},
     optimization: {
         runtimeChunk: {
             name: 'manifest'
@@ -18,15 +27,10 @@ module.exports = {
                     minChunks: 2,
                     minSize: 0,
                 },
-                styles: {
-                    name: 'styles',
-                    test: /\.scss$/,
-                    chunks: 'all',
-                    enforce: true,
-                },
                 vendor: {
-                    test: /node_moudules/,
+                    test: /node_modules/,
                     chunks: 'initial',
+                    name: "vendor",
                     priority: 10,
                     enforce: true,
                 }

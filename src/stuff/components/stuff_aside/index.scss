@@ -1,0 +1,14 @@
+:local(.style) {
+    height: 100vh;
+    position: relative;
+    background-color: #f8f8f8;
+    .add-tree {
+        height: 50px;
+        text-align: center;
+        font-size: 2em;
+        box-shadow: 0px 0px 2px #dadada;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+    }
+}

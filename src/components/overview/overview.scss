@@ -1,0 +1,54 @@
+@import "../../sass/var";
+
+.overview-container {
+    display: flex;
+    height: 120px;
+    background-color: $c-theme-table-header-bg;
+
+    .overview-item {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 20px 0;
+        border-right: 1px solid $nav-border;
+        box-sizing: border-box;
+        &:last-child {
+            border-right: 0;
+        }
+
+        .item-title {
+            flex: 1;
+            display: flex;
+            align-items: flex-end;
+            color: $menu-title;
+            padding-bottom: 15px;
+        }
+        .item-value {
+            flex: 1;
+            font-size: 20px;
+        }
+
+        .overview-title {
+            width: 14px;
+            height: 14px;
+            border-radius: 7px;
+            text-align: center;
+            margin-left: 10px;
+            color: $c-light-gray;
+        }
+        .contentText{
+            font-size:24px;
+        }
+    }
+}
+.desc-show{
+    font-size: 12px;
+    .ant-tooltip-arrow {
+        border-top-color: #b5b5b5
+    }
+    .ant-tooltip-inner {
+        background-color: #fff;
+        color: #b5b5b5;
+    }
+}

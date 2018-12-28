@@ -1,0 +1,17 @@
+@import './sass/common.scss';
+ul,li{
+    margin: 0;
+    padding: 0;
+}
+.plans {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    margin: 20px auto;
+}
+.sep {
+    margin:0 20px;
+}
+span {
+    display: inline-block
+}

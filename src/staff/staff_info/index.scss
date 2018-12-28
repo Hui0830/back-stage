@@ -1,0 +1,20 @@
+:local(.style) {
+    padding: 20px;
+    .row {
+        line-height: 20px;
+        padding-bottom: 22px;
+        .col-l {
+            text-align: right;
+            width: 90px;
+            padding-right: 18px;
+        }
+        .col-r {
+            color: #5a5a5a;
+            text-align: left;
+            font-size: 16px;
+            .img-role{
+                width: 600px;
+            }
+        }
+    }
+}

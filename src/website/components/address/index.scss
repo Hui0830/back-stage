@@ -1,0 +1,28 @@
+:local(.style) {
+    display: flex;
+    background: #eee;
+    padding: 20px;
+    justify-content: center;
+    &>div{
+        display: flex;
+        align-items: center;
+        i{
+            padding-right: 10px;
+            font-size: 20px;
+        }
+    }
+    .phone,.email {
+        width: 300px;
+        &::after {
+            content: '';
+            display: inline-block;
+            border: 1px solid #ccc;
+            height: 50px;
+            margin: 0 20px
+        }
+
+    }
+    .address {
+        max-width: 500px;
+    }
+}

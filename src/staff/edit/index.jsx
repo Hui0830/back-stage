@@ -61,16 +61,6 @@ class StaffEdit extends Component {
             phone: roleId,
             describe: 'ffafdafdf',
         })
-        // this.setState({
-        //     role: {
-        //         roleId: roleId,
-        //         roleName: '高级管理员'
-        //     },
-        //     email: '1285227393@qq.com',
-        //     name: '幻念不能',
-        //     phone: '33333333',
-        //     describe: 'ffafdafdf',
-        // })
     }
     // 提交修改、添加
     handleSubmit = (e) => {
@@ -78,8 +68,13 @@ class StaffEdit extends Component {
       this.props.form.validateFieldsAndScroll((err, values) => {
         if (!err) {
             console.log('Received values of form: ', values);
+            this.props.history.replace('/staff/list');
         }
       });
+    }
+    // 取消
+    onCancel = () => {
+        this.props.history.replace('/staff/list');
     }
     // 编辑模式修改密码
     editPwd = (bool) => {
@@ -136,7 +131,7 @@ class StaffEdit extends Component {
                         </Select>
                     )}
                 </FormItem>
-                <Table dataSource={dataSource} columns={columns} bordered pagination={false} className="role-table" />
+                <Table rowKey="role" dataSource={dataSource} columns={columns} bordered pagination={false} className="role-table" />
             </div>
             <TipTitle title='基本信息' />
             <FormItem
@@ -235,7 +230,7 @@ class StaffEdit extends Component {
             </FormItem>
             <FormItem className="submit-btn">
                 <Button type="primary" htmlType="submit">{`确认${isEdit ? '添加' : '修改'}`}</Button>
-                <Button type="primary" ghost>取消</Button>
+                <Button type="primary" ghost onClick={this.onCancel}>取消</Button>
             </FormItem>
         </Form>
       );

@@ -1,0 +1,72 @@
+:local(.style) {
+    .container {
+        width: 980px;
+        margin: 0 auto;
+        .content {
+            overflow: hidden;
+            position: relative;
+            .header {
+                position: absolute;
+                top: 35px;
+                left: 35px;
+                height: 200px;
+                width: 200px;
+                z-index: 1;
+                p {
+                    line-height: 2.5em;
+                    &::before {
+                        content: '';
+                        display: block;
+                        margin: 30px 0 10px;
+                        width: 60px;
+                        border: 1px solid #FBAB0A;
+                    }
+                }
+            }
+            .img-content {
+                padding-top: 40px;
+                &>div {
+                    width: 420px;
+                    height: 420px;
+                }
+                .left {
+                    float: left;
+                    margin-right: 20px;
+                    display: flex;
+                    flex-wrap: wrap;
+                    justify-content: flex-end;
+                    div {
+                        &:first-child {
+                            margin-left: 200px;
+                            margin-bottom: 20px;
+                        }
+                        background-color: #ccc;
+                        width: 200px;
+                        height: 200px;
+                        &:last-child {
+                            margin-left: 20px;
+                        }
+                    }
+                    
+                }
+                .right {
+                    margin-bottom: 20px;
+                    overflow: hidden;
+                    background-color: #ccc
+                }
+            }
+        }
+        .more {
+            padding-left: 50px;
+            .more-btn {
+                display: inline-block;
+                height: 30px;
+                text-align: center;
+                line-height: 30px;
+                width: 60px;
+                margin: 15px 0 50px;
+                border: 1px solid #d6d5d5;
+            }
+        }
+    }
+}

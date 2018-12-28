@@ -64,8 +64,9 @@ class UploadAvatar extends Component {
             </div>
         );
         const {previewVisible,previewImage,fileList} = this.state;
-        return [
-            <Upload
+        return (
+            <div>
+                <Upload
                 name="avatar"
                 listType="picture-card"
                 className="avatar-uploader"
@@ -74,13 +75,14 @@ class UploadAvatar extends Component {
                 onPreview={this.handlePreview}
                 onChange={this.handleChange}
                 fileList={fileList}
-            >
-                {fileList.length >= 1 ? null : uploadButton}
-            </Upload>,
-            <Modal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
-                <img alt="example" style={{ width: '100%' }} src={previewImage} />
-            </Modal>
-        ];
+                >
+                    {fileList.length >= 1 ? null : uploadButton}
+                </Upload>,
+                <Modal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
+                    <img alt="example" style={{ width: '100%' }} src={previewImage} />
+                </Modal>
+            </div>
+        )
     }
 }
 export default UploadAvatar

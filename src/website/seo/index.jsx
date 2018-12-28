@@ -58,11 +58,6 @@ const Links = ({links,onEditLinks,onDelete,isEdit}) => {
     );
 }
 const ModalForm = Form.create()(({form, links, isAdd, handleSubmit}) => {
-    console.log(isAdd);
-    // isAdd || form.setFieldsValue({
-    //     link: links.link,
-    //     name: links.name,
-    // });
     const formItemLayout = {
         labelCol: { span: 3 },
         wrapperCol: { span: 20 },

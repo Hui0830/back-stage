@@ -122,7 +122,7 @@ class ArticleEdit extends Component {
                         onChange={(val) => this.setState({tag: val})}
                     >
                         {
-                            selectData.map(item => <Option value={item.id}>{item.val}</Option>)
+                            selectData.map(item => <Option key={item.id} value={item.id}>{item.val}</Option>)
                         }
                     </Select>
                 </div>

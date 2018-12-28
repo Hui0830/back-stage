@@ -52,7 +52,7 @@ class StaffInfo extends Component {
                     {
                         Object.keys(staff).map(key => {
                             return (
-                                <RowInfo l={KEY_MAP[key]} r={staff[key] || '-'} isIcon={key == 'icon'} />
+                                <RowInfo key={key} l={KEY_MAP[key]} r={staff[key] || '-'} isIcon={key == 'icon'} />
                             )
                         })
                     }

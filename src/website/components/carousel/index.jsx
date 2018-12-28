@@ -1,8 +1,15 @@
 import React,{ Component } from 'react';
+import PropTypes from 'prop-types';
 
 import { style } from './index.scss';
 
 class XymCarousel extends Component {
+    static propTypes = {
+        position: PropTypes.string
+    }
+    static defaultProps = {
+        position: 'bottom-left',
+    }
     constructor() {
         super(...arguments);
         this.timeId = ''
@@ -41,7 +48,7 @@ class XymCarousel extends Component {
     }
 
     render() {
-        const { children } = this.props;
+        const { children, position } = this.props;
         const { tab } = this.state;
         const childCount = React.Children.count(children)
         return (
@@ -57,7 +64,7 @@ class XymCarousel extends Component {
                      })
                  }
                 </div>
-                 <div className="carousel-icon">
+                 <div className={`carousel-icon ${position}`}>
                     {this.renderTab()}
                  </div>
             </div>

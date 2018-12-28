@@ -8,6 +8,7 @@ import StaffSay from './components/staff_say';
 import Introduction from './components/introduction';
 import Contact from './components/contact_us';
 import Address from './components/address';
+import Product from './components/product';
 
 import { webData } from './web_test_data';
 import { style } from './index.scss';
@@ -86,6 +87,11 @@ class Website extends Component {
                     addressData: val,
                 })
                 break;
+            case 'productData': 
+                this.setState({
+                    productData: val,
+                })
+                break;
                 
             default: return;
         }
@@ -97,13 +103,14 @@ class Website extends Component {
             aboutData,productNavData,
             purposeData,staffSayData,
             introductionData,contactData,
-            addressData
+            addressData,productData
         } = this.state;
         return (
             <div className={style}>
                 <WebHeader navData={navData} carousel={carouselData} onSave={this.onSave} />
                 <About aboutData={aboutData} onSave={this.onSave}/>
                 <ProductNav data={productNavData} onSave={this.onSave} />
+                <Product data={productData} onSave={this.onSave} />
                 <Purpose data={purposeData} onSave={this.onSave} />
                 <StaffSay data={staffSayData} onSave={this.onSave} />
                 <Introduction data={introductionData} onSave={this.onSave} />

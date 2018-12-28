@@ -16,24 +16,48 @@
     .carousel-icon {
         height: 20px;
         line-height: 20px;
-        text-align: right;
         padding-right: 20px;
         position: absolute;
-        bottom: 10px;
-        right: 0;
+        left: 0;
         width: 100%;
         .tab {
             display: inline-block;
             margin-right: 10px;
             height: 8px;
             width: 8px;
+            color: #FBAB0A;
             border-radius: 4px;
-            border: 1px solid #FBAB0A;
+            border: 1px solid;
             transition: all .3s ease-in-out;
         }
         .activeTab{
             background: #FBAB0A;
         }
+    }
+    .bottom-left {
+        text-align: left;
+        bottom: 10px;
+        padding-left: 20px;
+    }
+    .bottom-center {
+        text-align: center;
+        bottom: 10px;
+        left: 0;
+    }
+    .bottom-right {
+        text-align: right;
+        bottom: 10px;
+        padding-right: 20px;
+    }
+    .top-left {
+        text-align: left;
+        top: 10px;
+        padding-left: 20px;
+    }
+    .top-right {
+        text-align: right;
+        top: 10px;
+        padding-right: 20px;
     }
     &:hover {
         .carousel-icon {

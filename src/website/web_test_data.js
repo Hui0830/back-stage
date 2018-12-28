@@ -88,5 +88,10 @@ export const webData ={
         email: "Ada.li@mitong-household.com.cn ",
         address: "8005, Jimao Bldg., No. 111, Shaping North Road, Danzhutou, Nanwan Subdistrict, Longgang District"
 
+    },
+    productData: {
+        title: "Our Products",
+        smallTitle: "Mosquito net Crawling mat Ornament",
+        carouselNum: 3,
     }
 }

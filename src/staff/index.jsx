@@ -1,25 +1,10 @@
 import React, {Component} from 'react'
 import { Link } from 'react-router-dom'
-import Test from 'components/test'
-// import Plan from 'components/plan'
 import FilterSearch from './components/staff_filter';
 import { ROLE_NAME } from 'common/conf/constant';
 import { Table } from 'antd'
 
 require('./index.scss');
-
-let onePrice = 5000;
-let fivePrice = 175000;
-const priceArray = [
-    {
-        num: 1,
-        price: onePrice,
-    },
-    {
-        num: 5,
-        price: fivePrice,
-    },
-];
 const dataSource = [{
     key: '1',
     acount: '123444444',
@@ -60,7 +45,6 @@ const dataSource = [{
     key: 'action',
     title: '操作',
     render: (val) => {
-        console.log(val);
         return <div className='action'>
             <Link to={`/staff/edit/${val.acount}`} className="outline-btn edit-a">编辑</Link>
             <Link to={`/staff/${val.acount}`} className="btn-style search-a">查看</Link>
@@ -80,21 +64,8 @@ export default class Staff extends Component {
     }
     render() {
         return [
-            <FilterSearch {...filterData} onSearch={this.onSearch}  />,
-            <Table dataSource={dataSource} columns={columns} />,
-            <Test />,
-            <div className="plans">
-                {/* <Plan
-                    name="基础版"
-                    icon="discount"
-                    priceArray={priceArray}
-                    money={onePrice}
-                    buy={this.buy}
-                    type="1"
-                />
-                <Plan name="专业版" money={fivePrice} icon="multi-store" className="advanced sep" type="2" />
-                <Plan name="灵活方案" money="0" icon="multi-store" type="3" /> */}
-            </div>
+            <FilterSearch key="FilterSearch" {...filterData} onSearch={this.onSearch}  />,
+            <Table key="Table" rowKey="key" dataSource={dataSource} columns={columns} />,
         ]
     }
 }

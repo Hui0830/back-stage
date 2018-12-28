@@ -6,29 +6,54 @@ import { style } from './index.scss';
 
 
 const mainOverview = {
-    revenue: { title: '主营收入', desc: '除充值和耗卡以外，所有今日订单金额的总和', count: '-' },
-    recharge: { title: '充值金额', desc: '今日网店和门店销售充值卡以及充值收款金额的总和', count: '-' },
-    card: { title: '耗卡金额', desc: '今日通过充值余额付款金额的总和', count: '-' },
-    gift: { title: '赠送消耗', desc: '今日售出的充值卡和次卡赠送的服务权益次数中已使用的服务权益次数之和', count: '-' },
-    cardCostMoney: {
-        title: '卡耗金额',
-        desc: '今日卡内消耗的总金额',
-        count: '-',
-    },
+    revenue: { title: '浏览量(PV)', desc: '当日网站被浏览次数', count: '-' },
+    recharge: { title: '访客数(UV)', desc: '当日网站被浏览人数', count: '-' },
+    card: { title: 'IP数', desc: '当日网站被浏览的Ip总数', count: '-' },
+    gift: { title: '平均访问时长', desc: '当日网站被浏览的平均时长', count: '-' },
 };
 
 const subOverview = {
-    customer: { title: '到店人数', desc: '今日门店开单的人数', count: '-' },
-    reserve: { title: '预约单数', desc: '今天网店和门店成功的预约单数之和', count: '-' },
-    order: { title: '订单数', desc: '今日已完成的品项订单、充值订单、售卡订单数目之和', count: '-' },
-    member: { title: '新增会员', desc: '今日添加的新会员数', count: '-' },
+    customer: { title: '服务器使用剩余（天）', desc: '当前使用的服务器剩余的天数', count: '-' },
+    reserve: { title: '域名使用剩余（天）', desc: '当前使用的域名剩余的天数', count: '-' },
+    order: { title: 'CDN服务器使用剩余（天）', desc: '当前使用的CDN服务器剩余的天数', count: '-' },
 };
 
 const listData = [
     {
-        icon: 'line-chart',
+        icon: 'team',
+        iconColor: 'blue',
         value: '员工管理',
         href: '/staff/list'
+    },
+    {
+        icon: 'setting',
+        iconColor: 'blue',
+        value: '网站装修',
+        href: '/website/decorate'
+    },
+    {
+        icon: 'picture',
+        iconColor: '#c3e45',
+        value: '素材中心',
+        href: '/staff/list'
+    },
+    {
+        icon: 'read',
+        iconColor: '#45a231',
+        value: '文章管理',
+        href: '/article/list'
+    },
+    {
+        icon: 'user',
+        iconColor: '#eee',
+        value: '发布文章',
+        href: '/article/add'
+    },
+    {
+        icon: 'message',
+        iconColor: '#fef3ef',
+        value: '消息中心',
+        href: '/news/userMessage'
     }
 ]
 
@@ -89,7 +114,7 @@ class Dashboard extends Component {
                     dataSource={listData}
                     renderItem={item => (
                     <List.Item>
-                        <p onClick={() =>this.toShortcutPath(item.href)}><Icon type={item.icon} />{item.value}</p>
+                        <p className="common-function" onClick={() =>this.toShortcutPath(item.href)}><Icon theme="twoTone" twoToneColor={item.iconColor} type={item.icon} />{item.value}</p>
                     </List.Item>
                     )}
                 />

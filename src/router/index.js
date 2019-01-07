@@ -2,11 +2,14 @@ import React from 'react'
 import {
 	Route,
 	Switch,
-	Redirect
+	Redirect,
+	withRouter
 } from 'react-router-dom'
-import jsCookie from 'js-cookie'
-import NotFound from '../not_found_page'
-import Dashboard from '../dashboard'
+
+
+import {getIsAuth} from 'common/utils/auth';
+import NotFound from '../not_found_page';
+import Dashboard from '../dashboard';
 import staff from './routes/staff';
 import news from './routes/news';
 import recruit from './routes/recruit';
@@ -31,14 +34,13 @@ const routes = [
 	...article,
 ]
 
-function PrivateRoute({ component: Component,isAuthenticated, ...rest }) {
-	console.log(Component, isAuthenticated,rest);
+function PrivateRoute({ component: Component,isAuthenticated,userInfo,loginOut, ...rest }) {
+	// console.log(Component, isAuthenticated,rest);
 	return (
 	  <Route
 		{...rest}
 		render={props =>
-			isAuthenticated ? (
-			<MyLayout><Component {...props} /></MyLayout>
+			isAuthenticated ? (<Component {...props} />
 		  ) : (
 			<Redirect
 			  to={{
@@ -51,30 +53,46 @@ function PrivateRoute({ component: Component,isAuthenticated, ...rest }) {
 	  />
 	);
 }
-class Routes extends React.Component {
+// React.PureComponent
+class Routes extends React.PureComponent {
 	state = {
-		isAuthenticated: jsCookie.get('userName'),
+		isAuthenticated: getIsAuth(),
 	}
-	loginIn = (val) => {
+	// 获取用户信息
+	login = () => {
+			this.setState({
+				isAuthenticated: true,
+			})
+	}
+	// 退出登入，清除用户信息
+	loginOut = () => {
+		localStorage.clear();
 		this.setState({
-			isAuthenticated: val,
+			isAuthenticated: false
 		})
-	}
-	componentDidMount() {
-		console.log(this.state.isAuthenticated);
 	}
 	render() {
 		const { isAuthenticated } = this.state;
-		const defaultPath = isAuthenticated ? "/dashboard" : "/login";
-		console.log(defaultPath);
 		return (
 		<Switch>
-			<Route path='/' render={() => <Redirect to = {defaultPath} />} exact />
-			{routes.map(item => <PrivateRoute key={item.path} {...item} isAuthenticated={isAuthenticated} />)}
-			<Route path='/login' render={() => <Login loginIn={this.loginIn} />}/>
+			<Route path='/login' render={() => <Login loginIn={this.login} />}/>
+				{
+					isAuthenticated &&
+					<MyLayout loginOut={this.loginOut} >
+					{
+						routes.map(item => (
+							<PrivateRoute
+								key={item.path}
+								{...item}
+								isAuthenticated={isAuthenticated}
+								/>
+						))
+					}
+					</MyLayout>
+				}
 			<Route path='*' component={NotFound} />
 		</Switch>
 	)}
 }
-export default Routes
+export default withRouter(Routes)
 

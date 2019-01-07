@@ -1,16 +1,20 @@
 import React from 'react';
-import { Layout, Menu, Icon } from 'antd';
+import { Layout, Menu, Icon,Dropdown, Modal } from 'antd';
 import {
     Link,
     withRouter,
-  } from 'react-router-dom';
+} from 'react-router-dom';
+
+import { loginOut, getUserInfo } from 'Api/user';
 import { XYMBreadcrumb } from '../breadcrumb';
 import menu, { breadcrumbNameMap } from '../../common/conf/menu';
+import EditInfo from './edit_info';
 import logo from  '../../images/favicon.png';
 import { style }  from './index.scss';
+
+
 const { Header, Content, Footer, Sider } = Layout;
 const SubMenu = Menu.SubMenu;
-
 const PandaSvg = () => (
     <svg viewBox="0 0 1024 1024" width="1em" height="1em" fill="currentColor">
       <path d="M99.096 315.634s-82.58-64.032-82.58-132.13c0-66.064 33.032-165.162 148.646-148.646 83.37 11.91 99.096 165.162 99.096 165.162l-165.162 115.614zM924.906 315.634s82.58-64.032 82.58-132.13c0-66.064-33.032-165.162-148.646-148.646-83.37 11.91-99.096 165.162-99.096 165.162l165.162 115.614z" fill="#6B676E" p-id="1143" />
@@ -23,32 +27,76 @@ const PandaSvg = () => (
       <path d="M693.678 495.484m-33.032 0a33.032 33.032 0 1 0 66.064 0 33.032 33.032 0 1 0-66.064 0Z" fill="#464655" p-id="1150" />
     </svg>
   );
-  const PandaIcon = props => (
-    <Icon component={PandaSvg} {...props} />
-  );
+const PandaIcon = ({text,...props}) => (
+    <span>{text || ''}<Icon {...props} component={PandaSvg}  /></span>
+);
 
-
-class MyLayout extends React.Component {
+class MyLayout extends React.PureComponent {
     state = {
         collapsed: false,
+        visible: false,
         openKeys: [this.props.location.pathname.split('/')[1]],
+        userInfo: {},
       };
-    
-      onCollapse = (collapsed) => {
+    componentDidMount() {
+        getUserInfo().then(res => {
+            window._global = {
+                userInfo: res.data
+            };
+            this.setState({
+                userInfo: res.data
+            })
+        })
+    }
+    componentDidCatch(e) {
+        console.log(e)
+    }
+    onCollapse = (collapsed) => {
         this.setState({ collapsed });
-      }
-      toggle = () => {
+    }
+
+    toggle = () => {
         this.setState({
           collapsed: !this.state.collapsed,
         });
-      }
-      render() {
-        const { collapsed,openKeys } = this.state;
+    }
+
+    onClick = ({ key }) => {
+        switch (key) {
+            case "edit":
+                this.setState({
+                    visible: true
+                })
+                break;
+            case "loginOut":
+                loginOut().then(res => {
+                    this.props.loginOut();
+                    this.props.history.replace('/login');
+                });
+                break;
+            default: return;
+        }
+    };
+    // 关闭用户信息编辑
+    onCloseEditModel = () => {
+        this.setState({
+            visible: false,
+        })
+    }
+    render() {
+        const { collapsed,openKeys, visible,userInfo } = this.state;
+        const { children } = this.props;
         const marginLeft = !collapsed ? '200px' : '80px';
         const { pathname } = this.props.location;
         const defaultOpenKey = pathname.split('/')[1];
-        // const afterKeys = openKeys.length ? openKeys : [defaultOpenKey];
-        // console.log(pathname.split('/'));
+        
+        const userMenu = (
+            <Menu onClick={this.onClick} style={{minWidth:150}}>
+                <Menu.Item key="edit">编辑信息</Menu.Item>
+                <Menu.Item key="loginOut">退出系统</Menu.Item>
+            </Menu>
+        );
+
         return (
             <Layout className={style}>
                 <Sider
@@ -116,18 +164,30 @@ class MyLayout extends React.Component {
                             type={collapsed ? 'menu-unfold' : 'menu-fold'}
                             onClick={this.toggle}
                             />
-                        <PandaIcon style={{ fontSize: '32px', float: 'right', margin: '16px' }} />
+                        <Dropdown overlay={userMenu}>
+                            <p className="user-name"><PandaIcon style={{ fontSize: '32px', margin: '16px' }} text={userInfo ? userInfo.name : ''} /></p>
+                        </Dropdown>
                     </Header>
                     <Content>
+                        <Modal 
+                            footer={null}
+                            title="基本信息编辑"
+                            width={600}
+                            visible={visible}
+                            destroyOnClose
+                            onCancel={() => this.setState({visible: false})}
+                        >
+                            <EditInfo  userInfo={userInfo} onCloseEditModel={this.onCloseEditModel} />
+                        </Modal>
                         <XYMBreadcrumb breadcrumbNameMap={breadcrumbNameMap} />
                         <div style={{ padding: 24, background: '#fff', minHeight: '80vh' }}>
                             {
-                                this.props.children
+                                children
                             }
                         </div>
                     </Content>
                     <Footer>
-                        liwenhui ©2018 Created by 2018-11-27
+                        深圳市星婴美信息科技有限公司 ©2018 Created by 2018-11-27
                     </Footer>
                 </Layout>
             </Layout>

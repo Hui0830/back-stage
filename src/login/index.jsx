@@ -1,9 +1,8 @@
 import React from 'react';
 import {
-    Form, Icon, Input, Button, Checkbox,
+    Form, Icon, Input, Button, Checkbox,message
 } from 'antd';
 import { withRouter } from 'react-router-dom';
-import jsCookie from 'js-cookie'
 import {signIn } from 'Api/store';
   
 const FormItem = Form.Item;
@@ -14,13 +13,15 @@ class LoginForm extends React.Component {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
         if (!err) {
-            signIn(values).then((val) => {
-                console.log(val);
-                if(val.code == '10000') {
-                    console.log(window.location.href);
-                    this.props.loginIn(val.userName);
-                    this.props.history.push('/');
-                    
+            signIn(values).then((res) => {
+                console.log(res);
+                if(res.code === '100000'){
+                    localStorage.setItem('token', res.data);
+                    localStorage.setItem('token_exp', new Date().getTime());
+                    this.props.loginIn();
+                    this.props.history.replace('/dashboard');
+                }else{
+                    message.error(res.msg);
                 }
             })
             
@@ -34,9 +35,9 @@ render() {
         <Form onSubmit={this.handleSubmit} className="login-form">
             <FormItem>
             {
-                getFieldDecorator('userName', {
+                getFieldDecorator('account', {
                     rules: [{ required: true, message: 'Please input your username!' }],
-                })(<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Username" />)
+                })(<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="account" />)
             }
             </FormItem>
             <FormItem>

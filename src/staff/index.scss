@@ -3,3 +3,14 @@
     margin-left: 10px;
     color: #ffffff;
 }
+.action {
+    display: flex;
+    justify-content: flex-end;
+}
+.staff-td {
+    min-width: 150px;
+    text-align: center;
+}
+.ant-table-thead .staff-td {
+    text-align: center;
+}

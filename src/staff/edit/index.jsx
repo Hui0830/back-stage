@@ -3,9 +3,11 @@ import { withRouter } from 'react-router-dom';
 import {
     Form, Input, Tooltip, Icon, Select, Button,Table
   } from 'antd';
+import jsCookie from 'js-cookie';
+
 import { ROLE_NAME,ROLE_NAME_INFO_MAP } from 'common/conf/constant';
 import TipTitle from 'components/tip_title';
-// import { getUserInfo } from 'Api/staff'
+import { getStaffInfo, putStaff, addStaff } from 'Api/staff'
 
 import  { style } from './index.scss';
   
@@ -20,12 +22,25 @@ const columns = [{
     dataIndex: 'roleDescribe',
     key: 'roleDescribe',
 }];
-const dataSource = ROLE_NAME.slice(1).map(item => {
-    return {
-        role: item.roleName,
-        roleDescribe: ROLE_NAME_INFO_MAP[item.roleId]
-    }
-});
+const userRoleId = jsCookie.get('roleId'); // 用户角色级别
+const getRolesList = (type) => {
+    return ROLE_NAME.slice(1).reduce((Arr, item) => {
+        if(item.roleId > userRoleId) {
+            switch (type) {
+                case 'describe':
+                    Arr.push({
+                        role: item.roleName,
+                        roleDescribe: ROLE_NAME_INFO_MAP[item.roleId]
+                    });
+                    break;
+                default:
+                    Arr.push(item);
+            }
+        }
+        return Arr
+    },[])
+}
+console.log(getRolesList());
 
 
 class StaffEdit extends Component {
@@ -34,7 +49,7 @@ class StaffEdit extends Component {
       role: {},
       email: '',
       name: '',
-      phone: '',
+      account: '',
       describe: '',
       isEditPwd: !this.props.isEdit,
     };
@@ -47,30 +62,36 @@ class StaffEdit extends Component {
         isEdit && this.getEditInfo(match.params.id);
     }
     // 编辑模式获取角色编辑信息
-    getEditInfo = (roleId) => {
-        // getUserInfo(roleId).then(info => {
-        //     this.setState({
-        //         userInfo: info,
-        //     })
-        // })
-        // test
-        this.props.form.setFieldsValue({
-            role: 1,
-            email: '1285227393@qq.com',
-            name: '幻念不能',
-            phone: roleId,
-            describe: 'ffafdafdf',
+    getEditInfo = (userId) => {
+        getStaffInfo(userId).then(info => {
+            console.log(info);
+            this.props.form.setFieldsValue({
+                roleId: info.roles.roleId,
+                email: info.email,
+                name: info.name,
+                account: info.account,
+                describe: info.describe,
+            })
         })
     }
     // 提交修改、添加
     handleSubmit = (e) => {
-      e.preventDefault();
-      this.props.form.validateFieldsAndScroll((err, values) => {
-        if (!err) {
-            console.log('Received values of form: ', values);
-            this.props.history.replace('/staff/list');
-        }
-      });
+        const userId = this.props.match.params.id;
+        e.preventDefault();
+        this.props.form.validateFieldsAndScroll((err, values) => {
+            if (!err) {
+                console.log('Received values of form: ', values);
+                if(this.props.isEdit) {
+                    putStaff({userId, ...values}).then(res => {
+                        this.props.history.replace('/staff/list');
+                    })
+                } else {
+                    addStaff(values).then(v => {
+                        this.props.history.replace('/staff/list');
+                    })
+                }
+            }
+        });
     }
     // 取消
     onCancel = () => {
@@ -103,7 +124,7 @@ class StaffEdit extends Component {
     render() {
         const { getFieldDecorator } = this.props.form;
         const { isEdit } = this.props;
-        const { role, name, phone, describe, email,isEditPwd } = this.state;
+        const { roleId, name, account, describe, email,isEditPwd } = this.state;
         const formItemLayout = {
             labelCol: { span: 3 },
             wrapperCol: { span: 20 },
@@ -116,7 +137,7 @@ class StaffEdit extends Component {
                 {...formItemLayout}
                 label="选择职位"
                 >
-                    {getFieldDecorator('role', {
+                    {getFieldDecorator('roleId', {
                     rules: [{required: true, message: 'Please select your habitual residence!' }],
                     })(
                         <Select
@@ -125,13 +146,13 @@ class StaffEdit extends Component {
                             style={{ width: 250, marginLeft:10 }}
                         >
                             {
-                                ROLE_NAME.slice(1).map(v => <Option key={v.roleId} value={v.roleId}>{v.roleName}</Option>)
+                                getRolesList().map(v => <Option key={v.roleId} value={v.roleId}>{v.roleName}</Option>)
                             }
 
                         </Select>
                     )}
                 </FormItem>
-                <Table rowKey="role" dataSource={dataSource} columns={columns} bordered pagination={false} className="role-table" />
+                <Table rowKey="role" dataSource={getRolesList('describe')} columns={columns} bordered pagination={false} className="role-table" />
             </div>
             <TipTitle title='基本信息' />
             <FormItem
@@ -162,8 +183,8 @@ class StaffEdit extends Component {
                     </span>
                 )}
             >
-                {getFieldDecorator('phone', {
-                rules: [{ required: true, message: 'Please input your phone number!' }],
+                {getFieldDecorator('account', {
+                rules: [{ required: true, message: 'Please input your account number!' }],
                 })(
                 <Input  />
                 )}
@@ -223,13 +244,13 @@ class StaffEdit extends Component {
                 label="描述"
             >
                 {getFieldDecorator('describe', {
-                rules: [{ required: true, message: 'Please input your phone number!' }],
+                rules: [{ required: true, message: 'Please input your account number!' }],
                 })(
                 <Input.TextArea rows={6}  placeholder="Autosize height based on content lines" />
                 )}
             </FormItem>
             <FormItem className="submit-btn">
-                <Button type="primary" htmlType="submit">{`确认${isEdit ? '添加' : '修改'}`}</Button>
+                <Button type="primary" htmlType="submit">{`确认${isEdit ? '修改' : '添加'}`}</Button>
                 <Button type="primary" ghost onClick={this.onCancel}>取消</Button>
             </FormItem>
         </Form>

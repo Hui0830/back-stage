@@ -1,21 +1,23 @@
 import React, { Component } from 'react';
 import { List, Icon } from 'antd';
 import { withRouter } from 'react-router'
+
+import { getWebPreviewInfo } from 'Api/store';
 import { Overview, OverviewItem, OverviewTitle } from '../components/overview';
 import { style } from './index.scss';
 
 
 const mainOverview = {
-    revenue: { title: '浏览量(PV)', desc: '当日网站被浏览次数', count: '-' },
-    recharge: { title: '访客数(UV)', desc: '当日网站被浏览人数', count: '-' },
-    card: { title: 'IP数', desc: '当日网站被浏览的Ip总数', count: '-' },
-    gift: { title: '平均访问时长', desc: '当日网站被浏览的平均时长', count: '-' },
+    pvNum: { title: '浏览量(PV)', desc: '当日网站被浏览次数', count: '-' },
+    uvNum: { title: '访客数(UV)', desc: '当日网站被浏览人数', count: '-' },
+    ipNum: { title: 'IP数', desc: '当日网站被浏览的Ip总数', count: '-' },
+    averageTime: { title: '平均访问时长', desc: '当日网站被浏览的平均时长', count: '-' },
 };
 
 const subOverview = {
-    customer: { title: '服务器使用剩余（天）', desc: '当前使用的服务器剩余的天数', count: '-' },
-    reserve: { title: '域名使用剩余（天）', desc: '当前使用的域名剩余的天数', count: '-' },
-    order: { title: 'CDN服务器使用剩余（天）', desc: '当前使用的CDN服务器剩余的天数', count: '-' },
+    serverDay: { title: '服务器使用剩余（天）', desc: '当前使用的服务器剩余的天数', count: '-' },
+    domainDay: { title: '域名使用剩余（天）', desc: '当前使用的域名剩余的天数', count: '-' },
+    cdnDay: { title: 'CDN服务器使用剩余（天）', desc: '当前使用的CDN服务器剩余的天数', count: '-' },
 };
 
 const listData = [
@@ -62,6 +64,22 @@ class Dashboard extends Component {
     state = {
 
     }
+
+    componentDidMount() {
+        getWebPreviewInfo().then((res) => {
+            const { pvNum, uvNum, ipNum, averageTime, serverDay, domainDay, cdnDay } = res.data;
+            mainOverview.averageTime.count = averageTime;
+            mainOverview.pvNum.count = pvNum;
+            mainOverview.uvNum.count = uvNum;
+            mainOverview.ipNum.count = ipNum;
+            subOverview.serverDay.count = serverDay;
+            subOverview.domainDay.count = domainDay;
+            subOverview.cdnDay.count = cdnDay;
+            console.log(subOverview);
+            this.forceUpdate()
+        })
+    }
+
     toShortcutPath = (path) => {
         this.props.history.push(path);
     }

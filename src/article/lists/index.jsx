@@ -9,19 +9,18 @@ import {SelectFilter} from './select_filter';
 import {style} from './index.scss';
 
 const listData = [];
-for (let i = 1; i < 23; i++) {
-    listData.push({
-        id: i,
-        type: (i%2 == 0) ? 0 : 1,
-        title: `2018 年会放假通知${i}`,
-        time: '2018-12-' + i,
-        description: 'Ant Design, a design language for background applications, is refined by Ant UED Team.',
-        content: 'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
-    });
-}
+// for (let i = 1; i < 23; i++) {
+//     listData.push({
+//         id: i,
+//         type: (i%2 == 0) ? 0 : 1,
+//         title: `2018 年会放假通知${i}`,
+//         time: '2018-12-' + i,
+//         description: 'Ant Design, a design language for background applications, is refined by Ant UED Team.',
+//         content: 'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
+//     });
+// }
 
 const TimeText = ({ time }) => {
-    console.log(time);
     const { year, month, day } = getParseDate(time);
     return (
         <span className="time">
@@ -30,6 +29,12 @@ const TimeText = ({ time }) => {
         </span>
     )
 };
+const IconText = ({ type, text }) => (
+    <span>
+      <Icon type={type} style={{ marginRight: 8 }} />
+      {text}
+    </span>
+);
 const filterData = [
     {
         filterData: [
@@ -65,8 +70,9 @@ class ActicleList extends Component {
     getArticleList = () => {
         getArticleList().then(res => {
             console.log(res);
+            const { data, pageConfig } = res;
             this.setState({
-                listData: res,
+                listData: data,
             })
         })
     }
@@ -95,7 +101,7 @@ class ActicleList extends Component {
             },
             pageSize: 6,
         }
-        // const { listData } = this.state;
+        const { listData } = this.state;
         return(
             <div className={style}>
                 <div className="filter-container">
@@ -112,15 +118,17 @@ class ActicleList extends Component {
                     renderItem={item => (
                         <List.Item
                             key={item.title}
-                            actions={[<span>发布人：李文辉</span>]}
-                            extra={<img width={272} alt="logo" src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png" />}
+                            actions={[
+                                <IconText type="user" text={item.author.userId} />,
+                                <IconText type="tag" text={item.tag.name} />,
+                                <IconText type="message" text={item.reviewNum} />
+                            ]}
                         >
                             <List.Item.Meta
                             avatar={<TimeText time={item.time} />}
-                            title={<Link to={`/article/${item.id}`}>{item.title}</Link>}
-                            description={item.description}
+                            title={<Link to={`/article/detail/${item._id}`}>{item.title}</Link>}
+                            description={item.describe}
                             />
-                            {item.content}
                         </List.Item>
                     )}
                 />  

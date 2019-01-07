@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { Button, Select, Input, Icon } from 'antd';
 import styles from './index.scss';
 
 const { Option } = Select;
 
-class FilterSearch extends Component {
+class FilterSearch extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {
@@ -13,13 +13,11 @@ class FilterSearch extends Component {
         };
     }
     onSelectChange = (val) => {
-        // console.log(e);
         this.setState({
             filterId: val,
         });
     }
     onKeywordChange = (e) => {
-        console.log(e.target.value)
         this.setState({
             keyWord: e.target.value,
         })
@@ -42,7 +40,7 @@ class FilterSearch extends Component {
                     <Select
                         onChange={e => this.onSelectChange(e)}
                         className="select-container"
-                        value={filterId || 0}
+                        value={filterId || -1}
                         placeholder={`全部${lable}`}
                         style={{ flex: 1 }}
                     >
@@ -59,6 +57,7 @@ class FilterSearch extends Component {
                         prefix={<Icon type="search" className="prefix-icon" />}
                         value={keyWord}
                         onChange={this.onKeywordChange}
+                        onPressEnter={() => this.onSearch()}
                     />
                     <Button
                         type="primary"

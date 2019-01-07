@@ -28,6 +28,7 @@ export default [{
     path: '/article/drafts',
     component: ArticleDraft,
 }, {
-    path: '/article/:id',
+    path: '/article/detail/:id',
+    exact: true,
     component: ArticleMain,
 }];

@@ -1,9 +1,11 @@
+
+import { time } from './.auth-const';
 export const session_config = {
-    key: 'userName', 
-    maxAge: 86400000,
+    key: 'account', 
+    maxAge: time,
     overwrite: true,
     httpOnly: false, 
-    signed: false,
+    signed: true,
     rolling: false,
     renew: false,
 };

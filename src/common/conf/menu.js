@@ -1,3 +1,4 @@
+import checkAccess from '../access';
 const menu = {
     dashboard: {
         mid: 'dashboard',
@@ -119,19 +120,32 @@ const menu = {
         },
     }
 }
+// 面包屑
 const breadcrumbMap = {
     '/staff/edit': '员工编辑',
-    '/staff/:id': '员工详情',
-    '/article/:id': '文章详情',
+    '/staff/user': '员工详情',
+    '/article/detail/:id': '文章详情',
 };
+// 面包屑/根据用户角色权限动态导航
 Object.keys(menu).forEach(key => {
-    const {subMenu, href, text} = menu[key];
+    const {subMenu, href, text, mid} = menu[key];
+    if (!checkAccess(mid)) {
+        delete menu[key];
+    }
     if(href === '/dashboard') return;
     breadcrumbMap[href] = text;
     subMenu && Object.keys(subMenu).forEach(item => {
         const {href, name} = subMenu[item]
         breadcrumbMap[`/${href}`] = name;
+        // 这里约定，二级导航和一级导航之间用下划线相连接来定义二级导航的key，
+        // 此key要在access.js文件对应的一级模块里面定义好,如未定义，则认为所有角色都有访问权限
+        if (!checkAccess(`${key}_${item}`)) {
+            delete subMenu[item];
+        }
     })
 })
+
+console.log('breadcrumbMap',breadcrumbMap);
+
 export const breadcrumbNameMap = breadcrumbMap;
 export default menu;

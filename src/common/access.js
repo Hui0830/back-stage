@@ -4,49 +4,67 @@
  * @Todo: 登录用户拥有一个职位，不同职位拥有不同的权限
  */
 import {ROLE} from './conf/constant';
-import { intersection } from './utils/xym_lodash';
+import { intersection, _get } from './utils/xym_lodash';
+import jsCookie from 'js-cookie';
 
-const superAdmin = ROLE.SUPER_ADMIN; // 高级管理员
-const admin = ROLE.ADMIN; // 管理员
-const webEditor = ROLE.web_editor; // 网站编辑员
+// const roleIds = [_get(window, "_global.userInfo.roles.roleId")]; // 为后期多权限铺垫
+const roleId = parseInt(jsCookie.get('roleId'), 10);
+// const userId = jsCookie.get('userId');
+const roleIds = [roleId];
 
-const all = [superAdmin, admin, webEditor]; // 所有权限
+const creater = ROLE.CREATE;
+const superAdmin = ROLE.SUPER_ADMIN; // 高级管理员(仅次于创建者的角色)
+const admin = ROLE.ADMIN; // 管理员（负责网站的职位发布，留言处理，网站维护）
+const webEditor = ROLE.web_editor; // 网站编辑员（负责网站的装修、文章发布，动态发布）
+
+const all = [creater,superAdmin, admin, webEditor]; // 所有权限
 
 const dashboardConfig = {
     dashboard: all,
-    dashboard_transaction: [financeManager],
-    dashboard_prepay: [financeManager],
-    dashboard_deduct: [financeManager],
-    dashboard_marketing: [creator, superAdmin],
-    dashboard_customer: [customService],
-    dashboard_service: [creator, superAdmin, shopManager, staff, technician, financeBranch, customService],
-    dashboard_reserveList: [creator, superAdmin, shopManager, staff, technician, financeBranch, customService],
-    dashboard_card: [creator, superAdmin, shopManager, staff, technician, financeBranch, customService],
-    dashboard_charge: [creator, superAdmin, shopManager, staff, technician, financeBranch, customService],
-    dashboard_member: [creator, superAdmin, shopManager, staff, technician, financeBranch, customService],
-    dashboard_warn_tip: [creator, superAdmin], // 工作台警告提示
+    dashboard_warn_tip: [creater, superAdmin], // 工作台警告提示
 };
 
-const moduleAccessConfig = {
+const staffConfig = {
+    staff: [superAdmin, admin],
+    staff_list: [superAdmin, admin],
+    staff_add: [superAdmin],
+    staff_delete: [superAdmin],
+    staff_edit: [superAdmin],
+    staff_info: [superAdmin, admin]
+}
+
+const websiteConfig = {
+    website_decorate: [superAdmin, admin,webEditor],
+    website_seo: [superAdmin, admin],
+}
+
+const newsConfig = {
+    new: [superAdmin, admin],
+}
+
+const recruitConfig = {
+    recruit: [superAdmin, admin]
+}
+
+const accessConfig = {
     ...dashboardConfig,
-    ...reserveConfig,
-    ...goodsConfig,
-    ...orderConfig,
-    ...scrmConfig,
-    ...reportConfig,
-    ...assetConfig,
-    ...marketingConfig,
-    ...storeConfig,
-    ...settingConfig,
-    ...billNewConfig,
-    ...layoutConfig,
+    ...staffConfig,
+    ...websiteConfig,
+    ...newsConfig,
+    ...recruitConfig
 };
 
+// 是否拥有模块在、操作权限
 const checkAccess = (mid) => {
-    const roles = moduleAccessConfig[mid];
-    // 如果没有定义该模块的权限，则认为所有人都有权限
-    if (!Array.isArray(roles)) return true;
+    const roles = accessConfig[mid];
+    if (!Array.isArray(roles)) return true;  // 如果没有定义该模块的权限，则认为所有人都有权限
+    if(roleIds.includes(creater)) return true; // 店铺创建者拥有所有权限
+    // console.log(intersection(roles, roleIds))
     return intersection(roles, roleIds).length > 0; // 用户拥有角色集合与权限对应角色集合交集长度大于0
 };
+// 限制操作更高级的角色
+export const checkRoleAuth = (editRoleId) => {
+    return !!(editRoleId - roleId)
+}
 
 export default checkAccess;

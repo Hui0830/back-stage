@@ -21,6 +21,6 @@ export default [{
     component: StaffEdit,
     
 },{
-    path: '/staff/:id',
+    path: '/staff/user/:id',
     component: StaffInfo,
 }];

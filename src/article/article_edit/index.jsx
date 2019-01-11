@@ -1,47 +1,37 @@
-import React,{ Component } from 'react';
+import React,{ PureComponent } from 'react';
 import { withRouter } from 'react-router-dom';
 import {
     Input,
     Divider,
     Select,
     Button,
-    Modal
+    Modal,
+    message
 } from 'antd';
 import TipTitle from 'components/tip_title';
 import E from 'wangeditor'
 
-import { addArticle } from 'Api/article'
-
+import { addArticle, getArticleInfo, putArticle } from 'Api/article'
+import { ARTICLE_TAG_MAP, ARTICLE_STATUS } from 'common/conf/constant';
 import { getParseDate } from 'utils';
+
 import { style } from './index.scss';
 import ArticleView from  '../components/article_view';
 
 const { Option } = Select;
-const selectData = [
-    {
-        id: 0,
-        name: '公司大事记',
-    },
-    {
-        id: 1,
-        name: '公司活动',
-    },
-    {
-        id: 2,
-        name: '内部通知',
-    },
-    {
-        id: 3,
-        name: '其他',
-    }
-]
+const selectData = Object.keys(ARTICLE_TAG_MAP).map(key => ({id: key, name: ARTICLE_TAG_MAP[key]}));
+
 let editor;
-class ArticleEdit extends Component {
+class ArticleEdit extends PureComponent {
+    static defaultProps = {
+        isEdit: true,
+    }
     state = {
         title: '',
         describe: '',
-        tag: '',
+        tag: '0',
         content: '',
+        status: ARTICLE_STATUS.SAVE,
         openPreview: false
     }
     componentDidMount() {
@@ -58,13 +48,33 @@ class ArticleEdit extends Component {
         }
         editor.create();
         editor.txt.html('<p>文章正文内容</p>');
+
+        // 编辑模式下获取用户信息
+        this.getInfo();
     }
     componentWillMount() {
         editor = null
     }
+
+    getInfo = () => {
+        const { match, isEdit } = this.props;
+        const { id } = match.params;
+        isEdit && getArticleInfo(id).then(res => {
+            const { title, describe, tag, content,status } = res.data;
+            editor.txt.html(content);
+            this.setState({
+                title,
+                describe,
+                tag: tag.id,
+                content,
+                status,
+                loading: false,
+            });
+        })
+    }
+
     //响应Input
     onInputChange = (type, e) => {
-        console.log(e);
         switch (type) {
             case 1:
                 this.setState({
@@ -79,30 +89,28 @@ class ArticleEdit extends Component {
             default: return;
         }
     }
-    // 保存到草稿箱
-    onSave = () => {
+    //发布publish/保存文章save
+    onSave = (status = ARTICLE_STATUS.SAVE) => {
         const { title,describe,content,tag } = this.state;
-        const status = 0;
-        console.log({title,tag, describe, content});
-    }
-
-    //发布文章
-    onPublish = () => {
-        const status = 1;
-        const { title,describe,content,tag } = this.state;
+        const { isEdit, match, history } = this.props;
         const tags = selectData.filter(i => i.id == tag)[0];
         // 如果没有设置describe默认使用内容的前100字符
         const defaultDescribe = (describe.trim() == '') ? (editor.txt.text().slice(0,100) + '.....') : describe;
-        addArticle({title, describe: defaultDescribe, content, tag: tags, status}).then(res => {
-            this.props.history.replace('/article/list');
-        })
-        console.log({title,tag, describe, content,status});
+        if(isEdit) {
+            putArticle({title, describe: defaultDescribe, content, tag: tags, status, articleId:match.params.id }).then(res => {
+                message.success(res.msg);
+                history.replace(`/article/detail/${match.params.id}`)
+            })
+        } else {
+            addArticle({title, describe: defaultDescribe, content, tag: tags, status}).then(res => {
+                message.success(res.msg);
+                history.replace('/article/list');
+            })
+        }
     }
     render() {
-        const { match, isEdit } = this.props;
-        const { id } = match.params;
-        const { tag,title,describe,openPreview,content } = this.state;
-
+        const { tag,title,describe,openPreview,content,status } = this.state;
+        const { isEdit } = this.props;
         return (
             <div className={style}>
                 <TipTitle title="文章标题" />
@@ -129,7 +137,7 @@ class ArticleEdit extends Component {
                 <div className="select-container">
                     <span>文章分类：</span>
                     <Select 
-                        defaultValue={tag || 0}
+                        value={tag}
                         placeholder='选择分类'
                         onChange={(val) => this.setState({tag: val})}
                     >
@@ -142,8 +150,8 @@ class ArticleEdit extends Component {
                 <article ref="editorElem" style={{textAlign: 'left'}} />
                 <Divider />
                 <div className="footer">
-                    <Button onClick={this.onSave}>保存</Button>
-                    <Button onClick={this.onPublish}>发布文章</Button>
+                    <Button onClick={() => this.onSave(status)}>保存{isEdit && '编辑'}</Button>
+                    {(status == ARTICLE_STATUS.SAVE) && <Button onClick={() => this.onSave(ARTICLE_STATUS.PUBLISH)}>发布文章</Button>}
                     <Button onClick={() => this.setState({openPreview: true})}>预览</Button>
                 </div>
                 <Modal

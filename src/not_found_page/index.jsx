@@ -1,4 +1,5 @@
-import React from 'react'
+import React from 'react';
+import { withRouter } from 'react-router-dom';
 
 
 function returnToHome(history) {
@@ -13,4 +14,4 @@ const NotFound = ({location,history}) => (
 		<button onClick = {() => returnToHome(history)} >返回首页</button>
 	</div>
 )
-export default NotFound
+export default withRouter(NotFound)

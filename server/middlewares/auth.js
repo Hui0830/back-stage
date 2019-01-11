@@ -30,7 +30,7 @@ const auth = async (ctx, next) => {
     const userRoleId = ctx.state.user.roleId;
     // 判断是否具有相应权限
     if(!checkAccess(url, userRoleId)) {
-        ctx.throw(401,'没有权限访问');
+        ctx.throw(403,'没有权限访问');
     }
     if (diffRoleApis.includes(url)) {
         let userId='',roleId='';
@@ -39,7 +39,7 @@ const auth = async (ctx, next) => {
                 userId = ctx.query.userId;
                 const role = await userModel.findRoleById(userId);
                 if(role.roleId <= userRoleId ) {
-                    ctx.throw(401, '不可操作高级别角色信息');
+                    ctx.throw(403, '不可操作高级别角色信息');
                 }
                 break;
             case staffApi.staff_put.url:
@@ -47,13 +47,13 @@ const auth = async (ctx, next) => {
                 roleId = ctx.request.body.roleId;
                 const { roles } = await userModel.findRoleById(userId);
                 if(roles.roleId <= userRoleId || roleId <= userRoleId) {
-                    ctx.throw(401, '不可操作高级别角色信息');
+                    ctx.throw(403, '不可操作高级别角色信息');
                 }
                 break;
             default:
                 roleId = ctx.request.body.roleId;
                 if(roleId <= userRoleId ) {
-                    ctx.throw(401, '不可操作高级别角色信息');
+                    ctx.throw(403, '不可操作高级别角色信息');
                 }
                 break;
         }

@@ -2,7 +2,7 @@ import React,{ Component } from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import { Divider,Button,message, Popconfirm } from 'antd';
 
-import { getArticleInfo } from 'Api/article';
+import { getArticleInfo ,deleteArticle } from 'Api/article';
 
 import { getParseDate } from 'utils';
 import ArticleView from '../components/article_view';
@@ -32,14 +32,11 @@ class ActicleMain extends Component {
         })     
     }
     // 删除提示
-    confirm = (e) => {
-        console.log(e);
-        message.success('Click on Yes');
-      }
-      
-    cancel = (e) => {
-        console.log(e);
-        message.error('Click on No');
+    confirm = () => {
+        deleteArticle(this.props.match.params.id).then(res => {
+            message.success(res.msg);
+            this.props.history.replace('/article/list')
+        })
       }
     render() {
         const { match } = this.props;
@@ -51,7 +48,7 @@ class ActicleMain extends Component {
                     <Divider />
                     <div className="edit">
                         <Button ghost type="primary" icon="edit"><Link to={`/article/edit/${match.params.id}`}>编辑</Link></Button>
-                        <Popconfirm title="Are you sure delete this task?" onConfirm={this.confirm} onCancel={this.cancel} okText="Yes" cancelText="No">
+                        <Popconfirm title="Are you sure delete this task?" onConfirm={this.confirm} okText="Yes" cancelText="No">
                             <Button ghost type="danger" icon="delete">删除</Button>
                         </Popconfirm>
                     </div>

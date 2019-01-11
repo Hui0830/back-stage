@@ -52,26 +52,27 @@ require('./index.scss');
   
   
 const filterData = {
-    filterData: ROLE_NAME.map(v => {return { filterId: v.roleId, filterTip: v.roleName }}),
+    filterData: ROLE_NAME.map(v => ({ filterId: v.roleId, filterTip: v.roleName })),
     lable: '角色',
     searchTip: '输入用户名或手机号',
 }
 export default class Staff extends PureComponent {
     state = {
       dataSource: [],
-      lastStaffId: '',
       current: 1,
       pageSize: 4,
       total: 0,
       search: {},
     }
-    onSearch = ({ keyWord, filterId }) => {
-        if(keyWord || filterId != 0) {
+    onSearch = ({ keyWord, roleId }) => {
+      const search = {keyWord, roleId};
+      
+        if(JSON.stringify(search) !== JSON.stringify(this.state.search)) {
           this.setState({
-            search: {keyWord, filterId},
+            search: {keyWord, roleId},
             dataSource: [],
           }, () => {
-            this.getStaffList(1, this.state.search)
+            this.getStaffList(1, search)
           })
         }
     }
@@ -80,13 +81,22 @@ export default class Staff extends PureComponent {
     }
 
     getStaffList = (page = 1, search= null) => {
-      const { dataSource, lastStaffId,pageSize } = this.state;
-      getStaff({staffId: lastStaffId, page, pageSize, search}).then(res => {
+      const { dataSource,pageSize} = this.state;
+      
+      getStaff({page, pageSize, search}).then(res => {
         const { data, pageConfig } = res.data; 
         const { total, current, pageSize } = pageConfig;
+        let dataArr;
+        if(dataSource.length != total) {
+          dataArr = new Array(total);
+          dataArr.splice((current - 1)*pageSize, pageSize, ...data)
+        } else {
+          dataArr = dataSource.slice();
+          dataArr.splice((current - 1)*pageSize, pageSize, ...data);
+        }
+        console.log(dataArr)
         this.setState({
-          dataSource: dataSource.concat(data),
-          lastStaffId: data[data.length - 1]._id,
+          dataSource: dataArr,
           total,
           current,
           pageSize,
@@ -95,19 +105,14 @@ export default class Staff extends PureComponent {
     }
 
     onPageChange = (page, pageSize) => {
-      const { dataSource, total } = this.state;
-      const len = dataSource.length;
-      if(total <= len) {
+      const { dataSource } = this.state;
+      if(dataSource[(page-1)*pageSize]) {
         this.setState({
           current: page
         })
         return;
       }
-      this.setState({
-        current: page,
-      }, () => {
         this.getStaffList(page)
-      })
     }
 
     render() {

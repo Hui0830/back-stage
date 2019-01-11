@@ -10,7 +10,10 @@ export const intersection = (arr1, arr2) => {
     return arr;
 }
 
-export const _get = (object, path, defaultValue = '') => {
-    return (!Array.isArray(path) ? path.replace(/\[/g, '.').replace(/\]/g, '').split('.') : path)
-            .reduce((o, k) => (o || {})[k], object) || defaultValue;
+class Lodash {
+    get = (object, path, defaultValue = '') => {
+        return (!Array.isArray(path) ? path.replace(/\[/g, '.').replace(/\]/g, '').split('.') : path)
+                .reduce((o, k) => (o || {})[k], object) || defaultValue;
+    }
 }
+export default new Lodash();

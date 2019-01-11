@@ -1,13 +1,14 @@
 import { Tree,Icon, Input,message,Modal } from 'antd';
 import React,{Component} from 'react';
 
+import { getImgClasses,addImgClasses,putImgClasses, deleteImgClass } from 'Api/stuff'
+
+import _ from 'utils/xym_lodash';
 import RightMenu,{MenuOption} from 'components/right_menu';
 import { style } from './index.scss';
 
 const DirectoryTree = Tree.DirectoryTree;
 const { TreeNode } = Tree;
-
-
 
 
 class StuffAside extends Component {
@@ -16,57 +17,28 @@ class StuffAside extends Component {
         
     }
     state = {
-        tree: {
-            decorate: {
-                title: '装修',
-                leaf: [
-                    {
-                        title: '首页',
-                        key: 'decorate_home'
-                    },
-                    {
-                        title: '产品页',
-                        key: 'decorate_product'
-                    }
-                ]
-            },
-            article: {
-                title: '文章',
-                leaf: [
-                    {
-                        title: '活动',
-                        key: 'article_activity'
-                    },
-                    {
-                        title: '事记',
-                        key: 'article_info'
-                    }
-                ]
-            }
-        },
-        expandParent: 'all',
-        selectedKey: 'all',
-        selectKey: ''
+        tree: this.props.data,
+        rightClickItemInfo: {key:'all', isLeaf: false}
 
+    }
+    componentDidMount() {
+        // getImgClasses().then(res => {
+        //     this.setState({
+        //         tree: res.data,
+        //     })
+        // })
+        console.log(this.props.data)
     }
     onSelect = (selectedKeys, e) => {
         const selectedKey = selectedKeys[0];
         // 如果选择的是子节点取出父节点
-        this.setState({
-            expandParent: selectedKey.split('_')[0] || 'all',
-            selectedKey,
-        })
-        console.log('Trigger Select',selectedKeys);
-    };
-
-    onExpand = (expandedKeys, e) => {
-        console.log('Trigger Expand',expandedKeys,e.node.key);
+        this.props.getImgList(selectedKey);
+        console.log('Trigger Select',selectedKey);
     };
 
     // 目录右键操作弹窗提示 
-    onConfirm = (type='add',value = '') => {
-        let { selectKey } = this.state;
-        let menuName = ''
+    onConfirm = (type='add',value = '',key) => {
+        let menuName = value;
         const handleChange = (e) => {
             menuName = e.target.value;
         }
@@ -78,20 +50,20 @@ class StuffAside extends Component {
         switch (type) {
             case 'add':
                 modalConfig.content = <Input defaultValue={value} onChange={(e) => handleChange(e)} placeholder="请输入分类名" />;
-                modalConfig.onOk = () => this.onAdd(menuName);
+                modalConfig.onOk = () => this.onAdd(menuName,key);
                 modalConfig.title = '添加分类';
                 break;
             case 'rename':
                 console.log('name:',value)
                 modalConfig.content = <Input  defaultValue={value} onChange={(e) => handleChange(e)} placeholder="请输入分类名" />;
-                modalConfig.onOk = () => {this.onEdit(selectKey, 'rename', menuName)};
+                modalConfig.onOk = () => {this.onEdit('rename', menuName)};
                 modalConfig.title = '类目重命名';
                 modalConfig.iconType = 'edit';
 
                 break;
             case 'delete':
                 modalConfig.content = <p>删除后，该类目及其子类目都见被移除，是否确认删除！</p>;
-                modalConfig.onOk = () => this.onEdit(selectKey);
+                modalConfig.onOk = () => this.onEdit();
                 modalConfig.title = '类目删除';
                 modalConfig.okText = '删除';
                 modalConfig.okType = 'danger';
@@ -102,92 +74,159 @@ class StuffAside extends Component {
         Modal.confirm(modalConfig);
     }
     // 添加
-    onAdd = (name) => {
-        const { expandParent, tree } = this.state;
-        if(expandParent === 'all'){
-            if(Object.keys(tree).includes(name)) {
-                message.info('该类别已经存在')
-                return;
-            }
-            this.setState({
-                tree: {...tree, [name]: {title: name, leaf: []} }
-            });
-            return;
+    onAdd = (name,type) => {
+        const { rightClickItemInfo, tree } = this.state;
+        const { parentId } = rightClickItemInfo;
+        const key = type || rightClickItemInfo.key;
+        let params = {},
+            hasSameName;
+        if(key === 'all') {
+            params.name = name;
+            hasSameName = this.hasSameName(name, false);
+        } else {
+            params = {key, name, parentId};
+            hasSameName = this.hasSameName(name)
         }
-        const addTree = tree[expandParent];
-        addTree.leaf.push({
-            title: name,
-            key: `${expandParent}_${addTree.leaf.length}`
-        })
-        this.setState({
-            tree: {...tree, [expandParent]: addTree},
+        if(hasSameName) {
+            message.error('该类别已经存在');
+            return
+        }
+        addImgClasses({...params}).then(res => {
+            const data = (key === 'all') ? tree.concat(res.data) :
+                tree.map(item => {
+                    if(item._id === parentId) {
+                        item.leaf.push(res.data)
+                    }
+                    return item
+                });
+            this.setState({
+                tree: data
+            });
+            message.success(res.msg)
         })
     }
     // 编辑（重命名\删除）
-    onEdit = (key='all', type='delete', name='') => {
-        const { tree } = this.state;
-        let afterTree;
-        if(/_/gi.test(key)) {
-            const parentKey = key.split('_')[0];
-            let itemLeafTree = [];
-            if(type === 'rename') {
-                itemLeafTree = tree[parentKey].leaf.map(item => {
-                    if(item.key === key) return {...item, title: name};
-                    return item;
-                });
-            } else {
-                itemLeafTree = tree[parentKey].leaf.filter(item => item.key !== key);
+    onEdit = (type='delete', name='') => {
+        const { rightClickItemInfo,tree } = this.state;
+        const { key, parentId,isLeaf } = rightClickItemInfo;
+        let afterTree = tree;
+        if(type === 'rename') {
+            if(this.hasSameName(name, isLeaf)){
+                message.info('该名称已经存在，请重新命名');
+                return;
             }
-            const itemTree = {...tree[parentKey], leaf: itemLeafTree}
-            afterTree = {...tree, [parentKey]: itemTree}
-            
-        } else{
-            afterTree = tree;
-            console.info(key, type, name);
-            type === 'delete' ? (delete afterTree[key]) : afterTree[key].title = name;
+            putImgClasses({key,name, parentId}).then(res => {
+                if(isLeaf) {
+                    afterTree = tree.map(item => {
+                        if(item._id == parentId) {
+                            item.leaf.forEach(v => {
+                                if(v._id == key){
+                                    v.name = name;
+                                    return
+                                }
+                            })
+                        }
+                        return item;
+                    })
+                } else {
+                    afterTree = tree.map(v => {
+                        (v._id == key) && (v.name = name);
+                        return v
+                    })
+                }
+                this.setState({
+                    tree: afterTree,
+                })
+                message.success(res.msg);
+            })
+        } else {
+            deleteImgClass({key,parentId}).then(res => {
+                if(isLeaf) {
+                    afterTree = tree.map(item => {
+                        if(item._id == parentId) {
+                            item.leaf = item.leaf.filter(v => v._id != key);
+                        }
+                        return item;
+                    })
+                } else {
+                    afterTree = tree.filter(v => v._id != key)
+                }
+                this.setState({
+                    tree: afterTree
+                })
+                message.success(res.msg)
+            })
         }
-        this.setState({
-            tree: afterTree
-        })
+    }
+    hasSameName = (name, isLeaf = true) => {
+        const { parentId } = this.state.rightClickItemInfo;
+        const {tree} = this.state;
+        let hasSameName = false;
+        if(isLeaf) {
+            tree.forEach(v => {
+                if(v._id == parentId) {
+                    hasSameName = v.leaf.filter(item => item.name === name).length > 0;
+                    return
+                }
+            })
+        } else {
+            hasSameName = tree.filter(v => v.name === name).length > 0;
+        }
+        return hasSameName
     }
     // 根据key获取类目名
-    getMenuName = (key) => {
+    getMenuName = (rightClickItemInfo) => {
+        const { tree } = this.state;
+        const { isLeaf, parentId, key } = rightClickItemInfo;
         let menuName = '';
-        if(/_/gi.test(key)){
-            const parentKey = key.split('_')[0];
-            this.state.tree[parentKey].leaf.forEach(element => {
-                if(element.key === key) {
-                    menuName = element.title;
-                    return;
-                }
-            });
-            return menuName
 
-        } else {
-            Object.keys(this.state.tree).forEach(item => {
-                if(item === key){
-                    menuName = this.state.tree[item].title;
+        tree.forEach(item => {
+            if(isLeaf) {
+                if(item._id == parentId) {
+                    item.leaf.forEach(v => {
+                        if(v._id == key){menuName = v.name;return};
+                    });
                     return;
                 }
-            });
-            return menuName;
-        }
+            }
+            if(item._id == key){menuName = item.name;return};
+        })
+        return menuName;
+        
     }
     // 鼠标右键事件
     handleRightClick = (e) => {
-        //根目录不可编辑
-        if(e.node.props.eventKey === 'all'){
-            message.warn('根目录不可编辑');
-            return;
+        let key = 'all',
+            isLeaf = false,
+            parentId = '';
+        if(_.get(e, 'node.props')) {
+            const { eventKey } = e.node.props;
+            //根目录不可编辑
+            if(eventKey === 'all'){
+                message.warn('根目录不可编辑');
+                return;
+            };
+            key = eventKey;
+            isLeaf = e.node.props.isLeaf || false;
+            //如果是叶子节点需要获取其父节点
+            if(isLeaf){
+                this.state.tree.forEach(item => {
+                    item.leaf.forEach(v => {
+                        (v._id === key) && (parentId = item._id)
+                    })
+                })
+            } else {
+                parentId = key;
+            }
         }
-        const clickX = e.event.clientX;
-        const clickY = e.event.clientY;
-
-        console.log(e)
         this.setState({
             clickX: e.event.clientX,
             clickY: e.event.clientY,
-            selectKey: e.node.props.eventKey,
+            rightClickItemInfo: {
+                key,
+                parentId,
+                isLeaf
+            },
             visible: true,
         })
     };
@@ -201,7 +240,7 @@ class StuffAside extends Component {
     
 
     render() {
-        const { tree, visible,clickX,clickY,selectKey } = this.state;
+        const { tree, visible,clickX,clickY,rightClickItemInfo } = this.state;
         return (
             <div className={style}>
                 <DirectoryTree
@@ -209,15 +248,14 @@ class StuffAside extends Component {
                     defaultExpandedKeys={['all']}
                     defaultSelectedKeys={['all']}
                     onSelect={this.onSelect}
-                    onExpand={this.onExpand}
                     onRightClick={(e) => this.handleRightClick(e)}
                 >   <TreeNode title="全部图片" key="all" >
                     {
-                        Object.keys(tree).map(item => {return(
-                            <TreeNode title={tree[item].title} key={item}>
+                        tree.map(item => {return(
+                            <TreeNode title={item.name} key={item._id}>
                                 {
-                                    tree[item].leaf && tree[item].leaf.map(v => (
-                                        <TreeNode title={v.title} key={v.key} isLeaf />
+                                    item.leaf && item.leaf.map(v => (
+                                        <TreeNode title={v.name} key={v._id} isLeaf />
                                     ))
                                 }
                             </TreeNode>)}
@@ -226,13 +264,13 @@ class StuffAside extends Component {
                     </TreeNode>
                     
                 </DirectoryTree>
-                <div className="add-tree" onClick={this.onConfirm}>
+                <div className="add-tree" onClick={() => this.onConfirm('add','', 'all')} title='添加分类'>
                     <Icon type="plus" />
                 </div>
                 { visible && 
                     <RightMenu clickY={clickY} visible={visible} clickX={clickX} closeMenu={this.closeMenu}>
                         <MenuOption text='删除' onClick={() => this.onConfirm('delete')}/>
-                        <MenuOption text='编辑' onClick={() => this.onConfirm('rename', this.getMenuName(selectKey))}/>
+                        <MenuOption text='编辑' onClick={() => this.onConfirm('rename', this.getMenuName(rightClickItemInfo))}/>
                         <MenuOption text='添加' onClick={() => this.onConfirm('add')}/>
                         <MenuOption text='取消' />
                     </RightMenu>

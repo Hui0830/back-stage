@@ -124,7 +124,8 @@ const menu = {
 const breadcrumbMap = {
     '/staff/edit': '员工编辑',
     '/staff/user': '员工详情',
-    '/article/detail/:id': '文章详情',
+    '/article/detail': '文章详情',
+    '/article/edit': '文章编辑',
 };
 // 面包屑/根据用户角色权限动态导航
 Object.keys(menu).forEach(key => {

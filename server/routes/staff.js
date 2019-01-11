@@ -8,15 +8,27 @@ const crypto = require('crypto'),
 export default {
     // 获取用户列表
     [getRouterApi('staff_list')]: async (ctx) => {
-        let { page = 1, pageSize = 10, search } = ctx.query;
+        let { page = 1, pageSize = 10, search = JSON.stringify({keyWord: '', roleId: 'all'}) } = ctx.query;
         let result = [],
             total = 0;
         pageSize = parseInt(pageSize,10);
         page = parseInt(page, 10);
-        await userModel.count({}, (err, count) => {
+        const { keyWord, roleId } = JSON.parse(search);
+        const reg = new RegExp(keyWord, 'i');
+        let filter = {
+            $or: [
+                { name: {$regex : reg} },
+                { account: {$regex : reg}}
+            ]
+        }
+        if(roleId != 'all') {
+            const role = await roleModel.findOne({roleId: parseInt(roleId, 10)}, '_id');
+            filter.roles = role._id;
+        }
+        await userModel.count({...filter}, (err, count) => {
             total = count;
         });
-        result = await userModel.findUserList({page, pageSize, search});
+        result = await userModel.findUserList({page, pageSize, filter});
         console.log(result);
         ctx.send({data: result, pageConfig: {total: total,current: page,pageSize}})
     },

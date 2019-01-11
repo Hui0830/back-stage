@@ -68,29 +68,24 @@ articleSchema.statics = {
             status,
         })
     },
-    // 分页查找用户列表
-    findArticleList: async function ({page, pageSize, search = '{"keyWord":"", "tag": 0, "time": ""}'}) {
-        const { keyWord, tag, time} = JSON.parse(search);
-        const filter = {};
-        if(tag && tag != 0) {
-            filter['tag'] = tag;
-        };
-        if(time) {
-            filter['time'] = { $gt: new Date(time), $lt: new Date(`${time}-12-30`) }
-        }
-        const reg = new RegExp(keyWord, 'i');
-        
-        const query=this.find({
-            $or: [
-                { title: {$regex : reg} },
-                { describe: {$regex : reg}}
-            ],
+    // 修改
+    putArticle: function(pramas) {
+        const { articleId ,status, tag, title, describe, content, author } = pramas;
+        console.log(new Date())
+        return this.findByIdAndUpdate(
+            {_id: articleId},
+            {status,tag, title,content,describe, time: new Date(),author}
+        );
+
+    },
+    // 分页查找文章列表
+    findArticleList: async function ({page, pageSize, filter}) {
+        return this.find({
             ...filter
         })
             .select({ content: 0})
             .skip((page-1)*pageSize)
             .limit(pageSize);
-        return query
     }, 
 }
 

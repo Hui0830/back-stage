@@ -31,7 +31,15 @@ app.use(views(path.join(__dirname, '../dist/'), {
 // 使用网站图标
 app.use(favicon(path.join(__dirname, '../dist/favicon.ico')));
 // koa响应设置
-app.use(koaBody({ jsonLimit: REQUEST_LIMIT, formLimit: REQUEST_LIMIT, textLimit: REQUEST_LIMIT }));
+app.use(koaBody({
+    jsonLimit: REQUEST_LIMIT,
+    formLimit: REQUEST_LIMIT,
+    textLimit: REQUEST_LIMIT,
+    multipart: true,
+    formidable: {
+        maxFileSize: 200*1024*1024    // 设置上传文件大小最大限制，默认2M
+    }
+}));
 // 静态资源设置
 app.use(koaStatic(path.resolve(__dirname, "../dist")));
 app.keys = [cookieSecret];
@@ -49,8 +57,9 @@ app.use(koaJwt({
 }))
 // session验证
 app.use(async (ctx,next)=> {
-    if(!ctx.session.account && !whiteUrl.includes(ctx.request.url)) {
-        ctx.throw(401,'没有权限访问');
+    if(!ctx.session.user && !whiteUrl.includes(ctx.request.url)) {
+        console.log(ctx.session.user)
+        ctx.throw(401,'登入状态失效，请重新登入！');
     }
     await next();
 });

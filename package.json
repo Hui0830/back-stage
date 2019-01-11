@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "webpack-dev-server  --progress --colors --profile --config ./webpack.dev.js",
     "proBuild": "webpack --progress --colors --config ./webpack.prod.js",
-    "server": "nodemon ./server/start.js"
+    "server": "nodemon ./server/start.js",
+    "createTestData": "node ./server/create_test_data.js"
   },
   "repository": {
     "type": "git",

@@ -9,7 +9,7 @@ class FilterSearch extends PureComponent {
         super(props);
         this.state = {
             keyWord: '',
-            filterId: 0,
+            filterId: 'all',
         };
     }
     onSelectChange = (val) => {
@@ -24,7 +24,7 @@ class FilterSearch extends PureComponent {
     }
     onSearch = () => {
         const { keyWord, filterId } = this.state;
-        this.props.onSearch({ keyWord, filterId });
+        this.props.onSearch({ keyWord, roleId: filterId });
     }
     render() {
         const {
@@ -40,12 +40,13 @@ class FilterSearch extends PureComponent {
                     <Select
                         onChange={e => this.onSelectChange(e)}
                         className="select-container"
-                        value={filterId || -1}
+                        defaultValue='all'
+                        value={filterId}
                         placeholder={`全部${lable}`}
                         style={{ flex: 1 }}
                     >
                         {
-                            filterData.map(v => <Option key={v.filterId} value={v.filterId}>{v.filterTip}</Option>)
+                            [{ filterId: 'all', filterTip: '全部角色' }].concat(filterData).map(v => <Option key={v.filterId} value={v.filterId}>{v.filterTip}</Option>)
                         }
 
                     </Select>

@@ -1,6 +1,7 @@
 const crypto = require('crypto'),
     jwt = require('jsonwebtoken'),
     userModel = require('../db/models/userModel.js'),
+    { responseCode } = require('../common/const'),
     {getRouterApi} = require('../common/api_menu');
 import { jwtSecret,time } from '../config/.auth-const.js';
 
@@ -10,7 +11,7 @@ export default {
         const data = ctx.request.body;
         const { account, password, remember } = data;
         if(!account || !password){
-            return ctx.sendError('000002', '参数不合法');
+            return ctx.sendError(responseCode.PARAM_ERROR);
         }
         const result = await userModel.userLogin({
             account,
@@ -26,7 +27,7 @@ export default {
             ctx.session.user = result;
             return ctx.send(token, '登录成功');
         }else{
-            return ctx.sendError('000002', '用户名或密码错误');
+            return ctx.sendError(responseCode.PWD_ERROE);
         }
     },
     // login out
@@ -48,7 +49,7 @@ export default {
         if(user !== null){
             return ctx.send(user);
         }else{
-            return ctx.sendError('000002');
+            return ctx.sendError(responseCode.NO_LOGIN);
         }
     }
 }

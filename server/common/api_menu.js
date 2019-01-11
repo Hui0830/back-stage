@@ -20,15 +20,32 @@ const webInfoApi = {
 const articleApi = {
     article: {method: 'GET', url: 'articleInfo'},
     article_list: {method: 'GET', url: 'articleList'},
-    article_add: {method: 'POST', url: 'addArticle'}
+    article_add: {method: 'POST', url: 'addArticle'},
+    article_put: {method: 'PUT', url: 'putArticle'},
+    article_delete: {method: 'DELETE', url: 'deleteArticle'}, // @params articleId
+    article_drafts: {method: 'GET', url: 'articleDrafts'}, // @params status = 0
+}
+
+// 上传文件
+const imgApi = {
+    uploade_img: {method: 'POST', url: 'uploadeImg'},
+    delete_img: {method: 'DELETE', url: 'deleteImg'},
+    img_list: {method: 'GET', url: 'imgList'},
+    put_img: {method: 'PUT', url: 'putImg'},
+    img_classes_get: {method: 'GET', url: 'imgClasses'},
+    img_classes_put: {method: 'PUT', url: 'imgClasses'},
+    img_classes_add: {method: 'POST', url: 'imgClasses'},
+    img_classes_delete: {method: 'DELETE', url: 'imgClasses'},
 }
 
 const apiConfig = {
     ...staffApi,
     ...userApi,
     ...webInfoApi,
-    ...articleApi
+    ...articleApi,
+    ...imgApi
 }
+
 
 const getRouterApi = (key) => {
     return JSON.stringify(apiConfig[key]);

@@ -3,45 +3,36 @@ import { Link, withRouter } from 'react-router-dom';
 import {
     Tag,
     Spin,
-    Modal
+    Modal,
+    message
 } from 'antd'
 
+import { getArticleDrafts,deleteArticle } from 'Api/article';
+
 import { getParseDate } from 'utils'
-import { ARTICLE_CLASSIFY_MAP,ARTICLE_CLASSIFY } from 'common/conf/constant';
+import { ARTICLE_TAG_MAP,ARTICLE_TAG } from 'common/conf/constant';
 import Empty from 'components/empty';
 import { style } from './index.scss';
 
-const listData = [];
-for (let i = 1; i < 23; i++) {
-    listData.push({
-        id: i,
-        type: (i%2 == 0) ? 0 : 1,
-        tag: i%2+1,
-        title: `2018 年会放假通知${i}`,
-        time: '2018-12-' + i,
-        description: 'Ant Design, a design language for background applications, is refined by Ant UED Team.',
-        content: 'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
-    });
-}
-const Item = ({ tag, title, time,articleId,deleteConfirm,onEdit }) => {
+const Item = ({ tag, title, time,articleId,deleteConfirm,onEdit,author }) => {
     function getTagColor(tag){
-        switch(tag) {
-            case ARTICLE_CLASSIFY.NOTES:
+        switch(parseInt(tag)) {
+            case ARTICLE_TAG.NOTES:
                 return "geekblue";
                 break;
-            case ARTICLE_CLASSIFY.ACTIVITY:
+            case ARTICLE_TAG.ACTIVITY:
                 return 'orange';
                 break;
-            case ARTICLE_CLASSIFY.NOTICE:
+            case ARTICLE_TAG.NOTICE:
                 return 'magenta';
                 break;
             default: return;
         }
     }
     return (
-        <section className="item">
+        <section className="item" key = {articleId}>
             <div className="item-title">
-                <Tag color={getTagColor(tag)}>{ARTICLE_CLASSIFY_MAP[tag]}</Tag>
+                <Tag color={getTagColor(tag)}>{ARTICLE_TAG_MAP[tag]}</Tag>
                 <Link to={`/article/edit/${articleId}`}>
                     <h3 className='item-heater'>
                         {title}
@@ -49,7 +40,7 @@ const Item = ({ tag, title, time,articleId,deleteConfirm,onEdit }) => {
                 </Link>
             </div>
             <div className="item-bottom">
-                <p>保存于{time}. <span className="edit-btn" onClick={() => onEdit(articleId)}>编辑</span></p>
+                <p className="edit-info">最新由<span>{author}</span>修改保存于{time}. <span className="edit-btn" onClick={() => onEdit(articleId)}>编辑</span></p>
                 <span className="delete-span" onClick={() => deleteConfirm(articleId)}>舍弃</span>
             </div>
         </section>
@@ -58,7 +49,7 @@ const Item = ({ tag, title, time,articleId,deleteConfirm,onEdit }) => {
 
 class ArticleDraft extends Component {
     state = {
-        listData: listData,
+        listData: [],
         loading: false
     }
 
@@ -66,28 +57,39 @@ class ArticleDraft extends Component {
         this.setState({
             loading: true
         })
-        setTimeout(() => {
+        getArticleDrafts().then(res => {
             this.setState({
-                loading: false
+                loading: false,
+                listData: res.data || [],
             })
-        }, 1000)
+        })
     }
 
     deleteConfirm = (id) => {
         Modal.confirm({
             title: '提示',
             content: `确认舍弃后${id ? '此文章' : '所有草稿箱文章'}将会彻底删除！`,
-            onOk: () => this.onDelete(id)
+            onOk: () => this.onDelete(id),
+            okType: 'danger',
+            okText: `删除${id ? '' : '全部'}`,
+            cancelText: '取消'
         })
     }
 
     // 删除
     onDelete = (id) => {
         const { listData } = this.state;
-        const afterListData = (!!id) ? listData.filter(item => item.id !== id) : [];
-        console.log(!!id);
         this.setState({
-            listData: afterListData,
+            loading: true
+        })
+        const articleId = id || 'status_0';
+        deleteArticle(articleId).then((res) => {
+            const afterListData = (articleId === 'status_0') ? [] : listData.filter(item => item._id !== articleId);
+            message.success(res.msg);
+            this.setState({
+                listData: afterListData,
+                loading: false
+            })
         })
     }
 
@@ -107,13 +109,15 @@ class ArticleDraft extends Component {
                 <Spin spinning={loading}>
                 {
                     listData.map(item => <Item
+                        key={item._id}
                         tag={item.tag}
-                        articleId={item.id}
+                        articleId={item._id}
                         title={item.title}
+                        author={item.author}
                         time={getParseDate(item.time).fullTime}
                         onEdit={this.onEdit}
                         deleteConfirm={this.deleteConfirm}
-                        key={item.id} />)
+                        />)
                 }
                 </Spin>
                 <Empty isEmpty={isEmpty} />

@@ -5,12 +5,14 @@ import user from './user';
 import webInfo from './web_info';
 import staff from './staff';
 import article from './article';
+import uploade from './uploade';
 
 const routes = {
     ...user,
     ...webInfo,
     ...staff,
     ...article,
+    ...uploade
 }
 router.use('/api/*', auth);
 Object.keys(routes).forEach(key => {

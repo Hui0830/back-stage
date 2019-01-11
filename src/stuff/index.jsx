@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import {
-    Layout, Pagination, Icon
+    Layout, Pagination, Icon, Spin
 } from 'antd';
+
+import { getImgClasses, getImgList} from 'Api/stuff';
 
 import StuffAside from './components/stuff_aside';
 import ImgItem from './components/stuff_img';
@@ -11,31 +13,50 @@ import { style } from './index.scss';
 
 
 const {
-    Header, Content, Footer, Sider,
+    Content, Footer, Sider,
   } = Layout;
-
-  let images = [];
-  for(let i = 0; i < 700; i++) {
-      images.push({
-          id: i,
-          title: `图片${i}`,
-          name: `tupian${i}.png`,
-          type: 'article',
-          url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-          size: i,
-          time: 100  - i
-      })
-  }
 
 class Stuff extends Component {
     state = {
         visible: false,
         timeSort: 0,
         sizeSort: 0,
-        images: images.slice(0,19),
+        images: [],
         current: 1,
-        total: images.length,
-        pageSize: 19,
+        pageSize: 4,
+        total: 0,
+        tag: 'all',
+        imagesClass: [],
+    }
+
+    componentDidMount() {
+        Promise.all([
+            this.getImgClasses(),
+            this.getImgList()
+        ])
+    }
+
+    // 获取图片分类
+    getImgClasses = () => {
+        this.setState({
+            visible: true
+        })
+        getImgClasses().then(res => {
+            this.setState({
+                imagesClass: res.data,
+                visible: false
+            })
+        })
+    }
+    // 获取图片列表
+    getImgList = (tag = 'all') => {
+        getImgList({tag}).then(res => {
+            this.setState({
+                tag,
+                images: res.data
+            })
+        })
+        console.log(tag)
     }
 
     onSort = (type) => {
@@ -66,35 +87,54 @@ class Stuff extends Component {
       }
 
     render() {
-        const { timeSort, sizeSort, current, total, pageSize,images } = this.state;
+        const {
+            timeSort,
+            sizeSort,
+            current,
+            total,
+            pageSize,
+            images,
+            tag,
+            imagesClass,
+            visible
+        } = this.state;
         return (
+            <Spin spinning={visible}>
             <Layout style={{ minHeight: '100vh' }} theme='light'>
                 <Sider theme='light'>
-                    <StuffAside />
+                    {imagesClass.length > 0 && <StuffAside getImgList={this.getImgList} data={imagesClass} />}
                 </Sider>
                 <Layout theme='light' className={style}>
                     <Content>
-                        <div className="header">
-                            <span onClick={() => this.onSort('time')}>时间排序: <Icon type={timeSort ? "arrow-up" : "arrow-down"} /></span>
-                            <span onClick={() => this.onSort('size')}>大小排序: <Icon type={sizeSort ? "arrow-up" : "arrow-down"} /></span>
-                        </div>
-                        <div className="img-list">
-                        <ImgUpload>
-                            <div className="img-upload">
-                                <Icon type="picture" theme="twoTone" twoToneColor="#40a9ff" />
-                                <span>上传图片</span>
+                            <div className="header">
+                                <span onClick={() => this.onSort('time')}>时间排序: <Icon type={timeSort ? "arrow-up" : "arrow-down"} /></span>
+                                <span onClick={() => this.onSort('size')}>大小排序: <Icon type={sizeSort ? "arrow-up" : "arrow-down"} /></span>
                             </div>
-                        </ImgUpload>
-                        {
-                            images.map(item =>  <ImgItem key={item.id}   {...item}/>)
-                        }
-                        </div>
+                            <div className="img-list">
+                            <ImgUpload tag={tag} onSave={() => this.getImgList(tag)} >
+                                <div className="img-upload">
+                                    <Icon type="picture" theme="twoTone" twoToneColor="#40a9ff" />
+                                    <span>上传图片</span>
+                                </div>
+                            </ImgUpload>
+                            {
+                                images.map(item =>  <ImgItem key={item._id} imagesClass={imagesClass} {...item}/>)
+                            }
+                            </div>
                     </Content>
                     <Footer>
-                        <Pagination defaultCurrent={1} current={current} onChange={this.onChange} total={total} pageSize={pageSize} />
+                        <Pagination
+                            defaultCurrent={1}
+                            hideOnSinglePage
+                            current={current}
+                            onChange={this.onChange}
+                            total={total}
+                            pageSize={pageSize}
+                        />
                     </Footer>
                 </Layout>
             </Layout>
+            </Spin>
         )
     }
 }

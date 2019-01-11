@@ -76,6 +76,7 @@ class Routes extends React.PureComponent {
 		return (
 		<Switch>
 			<Route path='/login' render={() => <Login loginIn={this.login} />}/>
+			<Route path='/' exact render={() => <Redirect to="/dashboard" />} />
 				{
 					isAuthenticated &&
 					<MyLayout loginOut={this.loginOut} >
@@ -90,7 +91,7 @@ class Routes extends React.PureComponent {
 					}
 					</MyLayout>
 				}
-			<Route path='*' component={NotFound} />
+			<Route path='*' render={() => isAuthenticated ? <NotFound /> : <Redirect to="/login" />} />
 		</Switch>
 	)}
 }

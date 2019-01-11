@@ -43,22 +43,10 @@ userSchema.statics = {
         return this.findOne({account});
     },
     // 分页查找用户列表
-    findUserList: async function ({page, pageSize, search = '{"keyWord":"", "filterId": 0}'}) {
-        const { keyWord, filterId} = JSON.parse(search);
-        const reg = new RegExp(keyWord, 'i');
-        const query=this.findFullUserList({
-            $or: [
-                { name: {$regex : reg} },
-                { account: {$regex : reg}}
-            ]
-        })
+    findUserList: async function ({page, pageSize, filter}) {
+        return this.findFullUserList({...filter})
             .skip((page-1)*pageSize)
             .limit(pageSize);
-        if(filterId && filterId >= 0) {
-            const role = await roles.findOne({roleId: parseInt(filterId, 10)}, '_id');
-            query.where('roles', role._id)
-        }
-        return query
         // if (objectId) {
         //     return this.findFullUserList({'_id': {"$lt": objectId}})
         //         .limit(pageSize)

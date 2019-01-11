@@ -38,9 +38,16 @@
         .item-bottom {
             display: flex;
             justify-content: space-between;
-            .edit-btn {
-                color: #009a61;
-                margin-left: 10px;
+            .edit-info {
+                color: #999;
+                span {
+                    color: #555;
+                    padding: 0 6px;
+                }
+                .edit-btn {
+                    color: #009a61;
+                    margin-left: 10px;
+                }
             }
             .delete-span {
                 cursor: pointer;

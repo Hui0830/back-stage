@@ -1,4 +1,4 @@
-const { responseCode } = require('../common/const')
+const { responseCode, responseCodeMap } = require('../common/const')
 const sendHandle = () => {
     // 处理请求成功方法
     const render = ctx => {
@@ -14,12 +14,13 @@ const sendHandle = () => {
     
     // 处理请求失败方法
     const renderError = ctx => {
-        return (code, msg = '请求失败') => {
+        return (code = responseCode.UN_KNOWN, msg) => {
             ctx.set('Content-Type', 'application/json');
+            
             ctx.body = {
-                code: code || responseCode.UN_KNOWN,
+                code,
                 data: null,
-                msg
+                msg: msg || responseCodeMap[code] || '请求失败！'
             }
         }
     }

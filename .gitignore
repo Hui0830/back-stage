@@ -2,3 +2,4 @@ node_modules*
 .cache-loader*
 .vscode*
 .auth-const.js
+package-lock.json

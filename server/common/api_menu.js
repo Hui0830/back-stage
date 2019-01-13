@@ -30,6 +30,7 @@ const articleApi = {
 const imgApi = {
     uploade_img: {method: 'POST', url: 'uploadeImg'},
     delete_img: {method: 'DELETE', url: 'deleteImg'},
+    get_img_info: {method: 'GET', url: 'imgInfo'},
     img_list: {method: 'GET', url: 'imgList'},
     put_img: {method: 'PUT', url: 'putImg'},
     img_classes_get: {method: 'GET', url: 'imgClasses'},

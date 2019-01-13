@@ -32,3 +32,23 @@ export const getImgList = (params) => {
         return res.data
     })
 }
+//获取图片信息
+export const getImgInfo = (_id) => {
+    return axios.get('/api/imgInfo', {
+        params: {
+            _id
+        }
+    }).then(res => res.data)
+}
+//修改图片信息
+export const putImgInfo = (params) => {
+    return axios.put('/api/putImg',params).then(res => res.data)
+}
+//删除图片
+export const deleteImg = (_id) => {
+    return axios.delete('/api/deleteImg',{
+        params: {
+            _id
+        }
+    }).then(res => res.data)
+}

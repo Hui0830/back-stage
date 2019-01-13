@@ -10,7 +10,7 @@ const imagesSchema = new Schema({
         type: String,
         default: ''
     },
-    class: {
+    tag: {
         type: String,
         default: 'all'
     },

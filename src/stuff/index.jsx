@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import {
-    Layout, Pagination, Icon, Spin
+    Layout, Pagination, Icon, Spin,message,
 } from 'antd';
 
-import { getImgClasses, getImgList} from 'Api/stuff';
+import { getImgClasses, getImgList, deleteImg, putImgInfo} from 'Api/stuff';
 
 import StuffAside from './components/stuff_aside';
 import ImgItem from './components/stuff_img';
@@ -22,10 +22,12 @@ class Stuff extends Component {
         timeSort: 0,
         sizeSort: 0,
         images: [],
+        imagesCache: {},
         current: 1,
         pageSize: 4,
         total: 0,
         tag: 'all',
+        lastImgId: '',
         imagesClass: [],
     }
 
@@ -50,46 +52,68 @@ class Stuff extends Component {
     }
     // 获取图片列表
     getImgList = (tag = 'all') => {
-        getImgList({tag}).then(res => {
+        const { imagesCache,lastImgId,current } = this.state;
+        const pageSize = current === 1 ? (this.state.pageSize - 1) : this.state.pageSize;
+        getImgList({tag,_id: lastImgId,pageSize}).then(res => {
+            const { images, total } = res.data;
             this.setState({
                 tag,
-                images: res.data
+                total,
+                images,
+                lastImgId: images.length> 0 ? images[images.length-1]._id : '',
+                imagesCache: {...imagesCache, [current]: images}
             })
         })
-        console.log(tag)
     }
-
-    onSort = (type) => {
-        if(type === 'time') {
+    // 删除图片
+    deleteImg = (_id) => {
+        deleteImg(_id).then(res => {
+            this.getImgList(this.state.tag);
+            message.success(res.msg);
+        })
+    }
+    //编辑图片信息
+    editImgInfo = ({_id, name,alt,tag}) => {
+        putImgInfo({_id, name,alt,tag}).then(res => {
+            const {_id} = res.data;
+            let imgs = [];
+            if(this.state.tag === 'all' || this.state.tag == tag) {
+                imgs = this.state.images.map(item => {
+                    if(item._id === _id){
+                        item.name = name;
+                        item.alt = alt;
+                    }
+                    return item
+                })
+            } else {
+                imgs = this.state.images.filter(v => v._id != _id);
+            }
             this.setState({
-                timeSort: this.state.timeSort ? 0 : 1,
-            })
-        } else {
-            this.setState({
-                sizeSort: this.state.sizeSort ? 0 : 1,
-            })
-        }
+                images: imgs
+            });
+            message.success(res.msg)
+        })
     }
 
     onChange = (page, pageSize) => {
-        console.log(page);
-        let imgs = [];
-        if(images.length < page*pageSize) {
-            imgs = images.slice((page-1)*pageSize);
-        } else {
-            const currentIndex = (page-1)*pageSize;
-            imgs = images.slice(currentIndex, page*pageSize);
+        const { imagesCache, tag } = this.state;
+        console.log(this.state.imagesCache)
+        if(imagesCache[page]){
+            this.setState({
+                images: imagesCache[page],
+                current: page
+            })
+            return
         }
         this.setState({
-            current: page,
-            images: imgs
-        });
+            current: page
+        },() => {
+            this.getImgList(tag)
+        })
       }
 
     render() {
         const {
-            timeSort,
-            sizeSort,
             current,
             total,
             pageSize,
@@ -107,18 +131,26 @@ class Stuff extends Component {
                 <Layout theme='light' className={style}>
                     <Content>
                             <div className="header">
-                                <span onClick={() => this.onSort('time')}>时间排序: <Icon type={timeSort ? "arrow-up" : "arrow-down"} /></span>
-                                <span onClick={() => this.onSort('size')}>大小排序: <Icon type={sizeSort ? "arrow-up" : "arrow-down"} /></span>
+                                <span>{`共检索${total}条记录`}</span>
                             </div>
                             <div className="img-list">
-                            <ImgUpload tag={tag} onSave={() => this.getImgList(tag)} >
-                                <div className="img-upload">
-                                    <Icon type="picture" theme="twoTone" twoToneColor="#40a9ff" />
-                                    <span>上传图片</span>
-                                </div>
-                            </ImgUpload>
                             {
-                                images.map(item =>  <ImgItem key={item._id} imagesClass={imagesClass} {...item}/>)
+                                current === 1 &&
+                                <ImgUpload tag={tag} onSave={() => this.getImgList(tag)} >
+                                    <div className="img-upload">
+                                        <Icon type="picture" theme="twoTone" twoToneColor="#40a9ff" />
+                                        <span>上传图片</span>
+                                    </div>
+                                </ImgUpload>
+                            }
+                            {
+                                images.map(item =>  <ImgItem 
+                                    editImgInfo={this.editImgInfo}
+                                    deleteImg={this.deleteImg}
+                                    key={item._id}
+                                    imagesClass={imagesClass}
+                                    {...item}
+                                    />)
                             }
                             </div>
                     </Content>

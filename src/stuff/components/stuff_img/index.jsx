@@ -28,6 +28,7 @@ class ImgItem extends Component {
         alt: Proptypes.string.isRequired,
         name: Proptypes.string.isRequired,
         tag: Proptypes.string.isRequired,
+        _id: Proptypes.string.isRequired,
     }
     state = {
         visible: false,
@@ -37,13 +38,13 @@ class ImgItem extends Component {
         tag: this.props.tag
     }
 
-    onDelete = () => {
-        console.log(this.props.id)
+    onDelete = (_id) => {
+        this.props.deleteImg(_id)
     }
 
     onSave = () => {
         const { alt, name, tag } = this.state;
-        console.log(alt, name, tag)
+        this.props.editImgInfo({_id: this.props._id, alt, name, tag})
         this.setState({
             visible: false
         })
@@ -72,9 +73,9 @@ class ImgItem extends Component {
 
 
     render() {
-        const { alt, name, tag ,imagesClass} = this.props;
+        const { imagesClass, _id} = this.props;
         const url = `http://localhost:3000${this.props.url}`;
-        const { visible,showLargeImg } = this.state;
+        const { visible,showLargeImg, alt, name, tag } = this.state;
         const editFromProps = {
             alt,
             name,
@@ -91,7 +92,7 @@ class ImgItem extends Component {
                 <div className="img-warp" title={alt}>
                     <Icon type="eye" onClick={() => this.setState({showLargeImg: true})} />
                     <Icon type="edit" onClick={() => this.setState({visible: true})} />
-                    <Icon type="delete" onClick={this.onDelete} />
+                    <Icon type="delete" onClick={() => this.onDelete(_id)} />
                 </div>
                 <Modal
                     title="图片信息编辑"

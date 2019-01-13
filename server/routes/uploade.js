@@ -57,7 +57,7 @@ export default {
                     url: `/resource/${file.name}`,
                     size: file.size,
                     alt: file.name,
-                    class: tag
+                    tag
                 }
                 resolve(data);
             });
@@ -68,12 +68,35 @@ export default {
         return resData !== null ? ctx.send(resData, '图片上传成功') : ctx.sendError(responseCode.UN_KNOWN, '图片上传失败');
       },
       [getRouterApi('img_list')]: async (ctx) => {
-          const { tag } = ctx.query;
-          let select = {};
-          (tag !== 'all') && (select.tag = tag);
-          const result = await imagesModel.find({...select});
-          return result !== null ? ctx.send(result) : ctx.sendError(responseCode.UN_KNOWN, '图片获取失败');
+            const { tag,pageSize = 4,_id } = ctx.query;
+            let select = {},total = 0;
+            let result = null;
+            (tag !== 'all') && (select.tag = tag);
+            await imagesModel.count({...select}, (err, count) => {
+                total = count;
+            });
+            if(_id) {
+                result = await imagesModel.find({...select, _id: {$lt: _id}}).limit(parseInt(pageSize,10)).sort({_id: -1});
+            } else {
+                result = await imagesModel.find({...select}).limit(parseInt(pageSize,10)).sort({_id: -1});
+            }
+            return result !== null ? ctx.send({images: result, pageSize, tag,total}) : ctx.sendError(responseCode.UN_KNOWN, '图片获取失败');
 
-      }
+      },
+      [getRouterApi('get_img_info')]: async (ctx) => {
+            const { _id } = ctx.query;
+            const result = await imagesModel.findById(_id, 'name alt tag');
+            return result !==null ? ctx.send(result) : ctx.sendError(responseCode.UN_KNOWN);
+      },
+      [getRouterApi('put_img')]: async (ctx) => {
+            const { tag, name, alt, _id } = ctx.request.body;
+            const result = await imagesModel.findByIdAndUpdate(_id, {tag, name, alt});
+            return result !== null ? ctx.send(result, '图片信息已修改') : ctx.sendError(responseCode.UN_KNOWN, '图片信息修改失败');
+      },
+      [getRouterApi('delete_img')]: async (ctx) => {
+        const { _id } = ctx.query;
+        const result = await imagesModel.deleteOne({_id});
+        return result !== null ? ctx.send(result, '图片已删除') : ctx.sendError(responseCode.UN_KNOWN, '图片删除失败');
+  }
 }
 

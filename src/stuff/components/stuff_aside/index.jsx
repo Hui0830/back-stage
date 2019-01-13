@@ -1,7 +1,7 @@
-import { Tree,Icon, Input,message,Modal } from 'antd';
+import { Tree,Icon, Input,message,Modal,Affix } from 'antd';
 import React,{Component} from 'react';
 
-import { getImgClasses,addImgClasses,putImgClasses, deleteImgClass } from 'Api/stuff'
+import { addImgClasses,putImgClasses, deleteImgClass } from 'Api/stuff'
 
 import _ from 'utils/xym_lodash';
 import RightMenu,{MenuOption} from 'components/right_menu';
@@ -33,7 +33,6 @@ class StuffAside extends Component {
         const selectedKey = selectedKeys[0];
         // 如果选择的是子节点取出父节点
         this.props.getImgList(selectedKey);
-        console.log('Trigger Select',selectedKey);
     };
 
     // 目录右键操作弹窗提示 
@@ -243,6 +242,7 @@ class StuffAside extends Component {
         const { tree, visible,clickX,clickY,rightClickItemInfo } = this.state;
         return (
             <div className={style}>
+                <Affix offsetTop={10}>
                 <DirectoryTree
                     defaultExpandParent
                     defaultExpandedKeys={['all']}
@@ -274,7 +274,8 @@ class StuffAside extends Component {
                         <MenuOption text='添加' onClick={() => this.onConfirm('add')}/>
                         <MenuOption text='取消' />
                     </RightMenu>
-                }            
+                }
+                </Affix>          
             </div>
         );
     }

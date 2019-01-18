@@ -10,19 +10,6 @@ module.exports = {
         }
     },
     "extends": "airbnb",
-    "globals": {
-        "window": true,
-        "document": true,
-        "_global": true,
-        "describe": true,
-        "it": true,
-        "beforeEach": true,
-        "afterEach": true,
-        "expect": true,
-        "jest": true,
-        "React":true,
-        "PropTypes":true
-    },
     "rules": {
         "react/no-did-mount-set-state": 0,
         "no-nested-ternary": 0,
@@ -74,14 +61,4 @@ module.exports = {
         "brace-style": 0,
         "one-var": 0
     },
-    "settings": {
-        "import/resolver": {
-            "webpack": {
-                "config": "webpack.common.js"
-            },
-            "jest": {
-                "jestConfigFile": "./jest.conf.js"
-            }
-        },
-    }
 };

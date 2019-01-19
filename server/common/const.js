@@ -15,6 +15,7 @@ const responseCode = {
     USER_EXIST: '000005', //用户已存在
     PWD_ERROE: '000006', //账号或密码错误
     DB_FIND_ERR: '000007', //数据库操作出错
+    TIME_OUT: '000008', //请求超时
 }
 exports.responseCode = responseCode;
 exports.responseCodeMap = {

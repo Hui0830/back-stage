@@ -1,0 +1,40 @@
+:local(.style) {
+    background: #125e61;
+    min-height: 100vh;
+    overflow: hidden;
+    .login-form {
+        margin: 150px auto;
+        background: #00cce6;
+        box-shadow: 0px 6px 0px 6px #4cebff;
+        width: 500px;
+        padding: 0 20px 10px;
+        position: relative;
+        overflow: hidden;
+        .header {
+            height: 60px;
+            text-align: center;
+            margin: 10px 0 20px;
+            img {
+                height: 100%;
+                width: auto
+            }
+        }
+        .ant-form-item {
+            display: flex;
+            justify-content: center;
+            input {
+                width: 200px;
+            }
+        }
+        .login-form-button {
+            display: block;
+            width: 150px;
+            margin: 10px auto;
+        }
+        .login-form-forgot {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+        }
+    }
+}

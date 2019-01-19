@@ -7,12 +7,14 @@ const Koa = require('koa'),
     koaSession = require("koa-session"),
     koaJwt = require('koa-jwt'); //路由权限控制
 
-
+// 自定义工具、中间件
 const db = require('./db/db.js'),
     errorHandle = require('./middlewares/errorHandle.js'),
+    timeOut = require('./middlewares/time_out'),
     sendHandle = require('./middlewares/sendHandle.js');
-
 import router from './routes';
+
+//配置、常量
 import { session_config } from './config/session';
 import { cookieSecret,jwtSecret } from './config/.auth-const.js';
 
@@ -47,6 +49,7 @@ app.use(koaSession(session_config, app));
 
 app.use(sendHandle());
 app.use(errorHandle);
+app.use(timeOut)
 
 const whiteUrl = ['/api/login']
 // jwt验证

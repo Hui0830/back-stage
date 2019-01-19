@@ -1,6 +1,7 @@
 const router = require('koa-router')();
 const auth = require('../middlewares/auth');
 
+
 import user from './user';
 import webInfo from './web_info';
 import staff from './staff';
@@ -14,6 +15,7 @@ const routes = {
     ...article,
     ...uploade
 }
+
 router.use('/api/*', auth);
 Object.keys(routes).forEach(key => {
     let {method, url} = JSON.parse(key);

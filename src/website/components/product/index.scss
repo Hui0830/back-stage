@@ -1,30 +1,32 @@
 :local(.style) {
+    border: 1px solid #ccc;
     .container {
         width: 980px;
         margin: 0 auto;
         .content {
             overflow: hidden;
             position: relative;
-            .header {
-                position: absolute;
-                top: 35px;
-                left: 35px;
-                height: 200px;
-                width: 200px;
-                z-index: 1;
-                p {
-                    line-height: 2.5em;
-                    &::before {
-                        content: '';
-                        display: block;
-                        margin: 30px 0 10px;
-                        width: 60px;
-                        border: 1px solid #FBAB0A;
-                    }
-                }
-            }
             .img-content {
                 padding-top: 40px;
+                padding-bottom: 15px;
+                .header {
+                    position: absolute;
+                    top: 35px;
+                    left: 0;
+                    height: 200px;
+                    width: 200px;
+                    z-index: 1;
+                    p {
+                        line-height: 2.5em;
+                        &::before {
+                            content: '';
+                            display: block;
+                            margin: 30px 0 10px;
+                            width: 60px;
+                            border: 1px solid #FBAB0A;
+                        }
+                    }
+                }
                 &>div {
                     width: 420px;
                     height: 420px;
@@ -41,10 +43,20 @@
                             margin-bottom: 20px;
                         }
                         background-color: #ccc;
-                        width: 200px;
-                        height: 200px;
+                        font-size: 0;
                         &:last-child {
                             margin-left: 20px;
+                        }
+                        a{
+                            display: inline-block;
+                            width: 200px;
+                            height: 200px;
+                            overflow: hidden;
+                            line-height: 200px;
+                            img {
+                                width: 100%;
+                                height: auto;
+                            }
                         }
                     }
                     
@@ -52,7 +64,17 @@
                 .right {
                     margin-bottom: 20px;
                     overflow: hidden;
-                    background-color: #ccc
+                    background-color: #ccc;
+                    a{
+                        display: inline-block;
+                        width: 420px;
+                        height: 420px;
+                        line-height: 420px;
+                        img {
+                            width: 100%;
+                            height: auto;
+                        }
+                    }
                 }
             }
         }
@@ -63,9 +85,10 @@
                 height: 30px;
                 text-align: center;
                 line-height: 30px;
-                width: 60px;
+                width: 100px;
                 margin: 15px 0 50px;
                 border: 1px solid #d6d5d5;
+                cursor: pointer;
             }
         }
     }

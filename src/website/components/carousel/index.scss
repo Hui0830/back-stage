@@ -4,7 +4,6 @@
     .carousel-warp {
         display: flex;
         transition: all .3s ease-in-out;
-        border: 1px solid red;
         .carousel-item {
             width: 100%;
             width: 100%;
@@ -59,9 +58,9 @@
         top: 10px;
         padding-right: 20px;
     }
-    &:hover {
-        .carousel-icon {
-            background: rgba(#000, 0.4)
-        }
-    }
+    // &:hover {
+    //     .carousel-icon {
+    //         background: rgba(#000, 0.4)
+    //     }
+    // }
 }

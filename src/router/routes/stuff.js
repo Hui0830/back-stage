@@ -1,4 +1,5 @@
-import Stuff from '../../stuff'
+import Stuff from '../../stuff';
+import StuffVideo from '../../stuff/video';
 
 export default [{
     path: '/stuff',
@@ -9,5 +10,5 @@ export default [{
     component: Stuff,
 }, {
     path: '/stuff/video',
-    component: Stuff,
+    component: StuffVideo,
 }];

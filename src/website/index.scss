@@ -1,5 +1,19 @@
 :local(.style) {
     overflow: hidden;
-    box-shadow: 0 0 3px #ccc;
-    
+    .page-container {
+        box-shadow: 0 0 3px #ccc;
+        margin: 10px;
+    }
+    .btn-container {
+        display: flex;
+        justify-content: center;
+        margin: 50px 0;
+        button {
+            width: 200px;
+            word-spacing: 3px;
+            &:first-child {
+                margin-right: 20px;
+            }
+        }
+    }
 }

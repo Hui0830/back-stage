@@ -16,7 +16,7 @@ const sendHandle = () => {
     const renderError = ctx => {
         return (code = responseCode.UN_KNOWN, msg) => {
             ctx.set('Content-Type', 'application/json');
-            
+            ctx.status = code;
             ctx.body = {
                 code,
                 data: null,

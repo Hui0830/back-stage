@@ -51,24 +51,39 @@ class Stuff extends Component {
         })
     }
     // 获取图片列表
-    getImgList = (tag = 'all') => {
-        const { imagesCache,lastImgId,current } = this.state;
-        const pageSize = current === 1 ? (this.state.pageSize - 1) : this.state.pageSize;
+    getImgList = (tag = 'all',lastImgId = '',clearCache = false) => {
+        const { imagesCache,current,pageSize } = this.state;
+        const Caches = clearCache ? {} : imagesCache;
         getImgList({tag,_id: lastImgId,pageSize}).then(res => {
             const { images, total } = res.data;
             this.setState({
                 tag,
                 total,
                 images,
+                pageSize,
                 lastImgId: images.length> 0 ? images[images.length-1]._id : '',
-                imagesCache: {...imagesCache, [current]: images}
+                imagesCache: {...Caches, [current]: images}
             })
         })
     }
     // 删除图片
     deleteImg = (_id) => {
         deleteImg(_id).then(res => {
-            this.getImgList(this.state.tag);
+            const { imagesCache, current, tag } = this.state;
+            const imagesCacheKeys = Object.keys(imagesCache).filter(key => (key < current));
+            console.log('imagesCacheKeys', imagesCacheKeys,imagesCache[current],imagesCache[current][0]);
+            let page = current;
+            const len = imagesCache[current].length;
+            if( len=== 1 && current !== 1) {
+                this.setState({
+                    current: page - 1
+                })
+            } else {
+                this.setState({
+                    lastImgId: imagesCache[current][0]._id,
+                    imagesCache: imagesCacheKeys.map(key => imagesCache[key])
+                }, () => this.getImgList(tag, this.state.lastImgId))
+            }
             message.success(res.msg);
         })
     }
@@ -96,7 +111,7 @@ class Stuff extends Component {
     }
 
     onChange = (page, pageSize) => {
-        const { imagesCache, tag } = this.state;
+        const { imagesCache, tag,lastImgId } = this.state;
         console.log(this.state.imagesCache)
         if(imagesCache[page]){
             this.setState({
@@ -108,7 +123,7 @@ class Stuff extends Component {
         this.setState({
             current: page
         },() => {
-            this.getImgList(tag)
+            this.getImgList(tag,lastImgId)
         })
       }
 
@@ -120,7 +135,7 @@ class Stuff extends Component {
             images,
             tag,
             imagesClass,
-            visible
+            visible,
         } = this.state;
         return (
             <Spin spinning={visible}>
@@ -136,7 +151,7 @@ class Stuff extends Component {
                             <div className="img-list">
                             {
                                 current === 1 &&
-                                <ImgUpload tag={tag} onSave={() => this.getImgList(tag)} >
+                                <ImgUpload tag={tag} onSave={() => this.getImgList(tag, '', true)} >
                                     <div className="img-upload">
                                         <Icon type="picture" theme="twoTone" twoToneColor="#40a9ff" />
                                         <span>上传图片</span>

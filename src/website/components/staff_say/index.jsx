@@ -1,8 +1,9 @@
 import React from 'react';
+
+import { imageFix } from 'common/conf/constant'
 import EditBaseForm from '../edit_base_form';
 import Plan from 'components/plan';
 
-import img from '../../../images/home.jpg';
 import { style } from './index.scss';
 
 const StaffSay = ({ onSave, data }) => {
@@ -14,7 +15,7 @@ const StaffSay = ({ onSave, data }) => {
         >
             <div className={style}>
                 <div>
-                    <div className="avatar" style={{backgroundImage: `url(${img})`}}></div>
+                    <div className="avatar" style={{backgroundImage: `url(${imageFix + data.image})`}}></div>
                 </div>
                 <div>
                     <p className="icon">“</p>

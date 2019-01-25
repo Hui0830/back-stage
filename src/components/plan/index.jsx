@@ -16,6 +16,10 @@ class Plan extends Component {
                 title:"编辑"
             },
         },
+        close: false,
+        add: false,
+        onClose: ()=>{},
+        onAdd: ()=> {},
     }
     state = {
         visibel: false,
@@ -26,17 +30,19 @@ class Plan extends Component {
     })
 
     render() {
-        const { modal } = this.props;
+        const { modal,close,add,onAdd,onClose } = this.props;
         return (
             <div className={style} style={this.props.style}>
                 {this.props.children}
                 <div className="plan-edit">
                     <Icon className="edit" onClick={() => this.setState({visibel: true})} type="edit" />
-                    <span className="close"><Icon type="close" /></span>
+                    {add && <span className="add" onClick={onAdd}><Icon type="plus" /></span>}
+                    {close && <span className="close" onClick={onClose}><Icon type="close" /></span>}
                 </div>
                 <Modal
                     onCancel={() => this.setState({visibel: false})}
                     visible={this.state.visibel}
+                    destroyOnClose={true}
                     footer={null}
                     width={620}
                     title="编辑"

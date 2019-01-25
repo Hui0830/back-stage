@@ -85,7 +85,7 @@ let config = merge(baseWebpackConfig,{
 				context: ['/api/*'],
 				target: 'http://localhost:3000',
 				secure: true
-			}
+			},
 		],
 		/*打开浏览器并打开本项目网址*/
 		after() {

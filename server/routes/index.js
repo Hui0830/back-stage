@@ -7,13 +7,15 @@ import webInfo from './web_info';
 import staff from './staff';
 import article from './article';
 import uploade from './uploade';
+import webDecorate from './web_decorate';
 
 const routes = {
     ...user,
     ...webInfo,
     ...staff,
     ...article,
-    ...uploade
+    ...uploade,
+    ...webDecorate
 }
 
 router.use('/api/*', auth);

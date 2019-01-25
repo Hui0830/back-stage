@@ -6,6 +6,10 @@
 
         .item-a {
             flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
             text-align: center;
             color: #939292;
             font-size: 20px;
@@ -19,13 +23,14 @@
                 background: #DCDCDC;
             }
             .icon{
-                font-size: 80px;
-                line-height: 100px;
-                display: inline-block;
-                width: 100%;
+                width: 150px;
+                overflow: hidden;
                 height: 100px;
-                margin-top: 70px;
                 margin-bottom: 25px;
+                img {
+                    width: 100%;
+                    height: auto;
+                }
             }
         }
     }

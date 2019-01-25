@@ -1,18 +1,18 @@
 import React, { Component } from 'react';
 
+import {imageFix} from 'common/conf/constant';
+
 import Plan from 'components/plan';
 import XymCarousel from '../carousel';
-import NavFrom from './nav_from';
-
+import LinkFrom from '../link_form';
+import CarouselFrom from '../select_img_form';
 import { style } from './index.scss';
 import logo from '../../../images/favicon.png';
 
 class WebHeader extends Component {
-    state = {
-    }
 
     render() {
-        const { navData,carousel } = this.props;
+        const { navData,carousel,navLinks } = this.props;
         return (
             <div className={style}>
                 <div className="nav-container">
@@ -20,7 +20,7 @@ class WebHeader extends Component {
                     <Plan
                             modal={
                                {
-                                   content: <NavFrom navData={navData} onSave={(val) => this.props.onSave('nav', val)} />,
+                                   content: <LinkFrom data={navData} navLinks={navLinks} onSave={(val) => this.props.onSave('nav', val)} />,
                                    config: {
                                        footer: null,
                                         title: '导航栏编辑',
@@ -37,10 +37,16 @@ class WebHeader extends Component {
                             </ul>
                     </Plan>
                 </div>
-                <Plan>
+                <Plan
+                    modal={
+                        {
+                            content: <CarouselFrom data= {carousel} navLinks={navLinks} onSave={(val) => this.props.onSave('carousel', val)}/>
+                        }
+                    }
+                >
                     <XymCarousel>
                     {
-                        carousel.map(item => <div key={item.url} className="item"><img src={item.img} /></div>)
+                        carousel.map(item => <div key={item.url} className="item"><img src={imageFix + item.image} /></div>)
                     }
                     </XymCarousel>
                 </Plan>

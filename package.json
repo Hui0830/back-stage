@@ -38,6 +38,7 @@
     "koa-static": "^5.0.0",
     "koa-view": "^2.1.1",
     "mongoose": "^5.3.14",
+    "qiniu": "^7.2.1",
     "react": "^16.6.0",
     "react-dom": "^16.6.0",
     "react-redux": "^5.1.0",

@@ -2,4 +2,5 @@ node_modules*
 .cache-loader*
 .vscode*
 .auth-const.js
+qiniu_config.js
 package-lock.json

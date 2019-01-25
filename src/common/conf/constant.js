@@ -67,3 +67,5 @@ export const ARTICLE_STATUS = {
 }
 
 /***************  文章-----end  ***************/
+
+export const imageFix = 'http://plk956cz3.bkt.clouddn.com/'

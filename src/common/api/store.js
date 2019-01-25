@@ -1,14 +1,15 @@
 import axios from './interceptors';
-import {
-    message
-} from 'antd';
-
-// 添加一个请求拦截器
 
 
 // 获取网站数据
 export const getWebPreviewInfo = () => {
-    return axios.get('/api/webPreviewInfo');
+    return axios.get('/api/webPreviewInfo').then(res => {
+        return res.data
+    });
+}
+
+export const getWebPageLink = () => {
+    return axios.get('/api/webPageLink').then(res => res.data);
 }
 
 export const signIn = (pramer) => {

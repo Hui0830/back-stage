@@ -3,7 +3,7 @@ import {
     Icon
 } from 'antd'
 
-import EditBaseForm from '../edit_base_form';
+import AddressForm from './address_form';
 import Plan from 'components/plan';
 
 
@@ -13,7 +13,7 @@ const Address = ({data, onSave}) => {
     return (
         <Plan
             modal={{
-                content: <EditBaseForm onSave={(val) => onSave("contact",val)} defaultData={data} />,
+                content: <AddressForm onSave={(val) => onSave("address",val)} defaultData={data} />,
                 config: {
                     title: '编辑',
                 }

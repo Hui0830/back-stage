@@ -1,0 +1,25 @@
+:local(.style) {
+    padding: 20px;
+    box-shadow: 0 0 3px #b7b7b7 inset;
+    .img-container {
+        height: 300px;
+        overflow-y: scroll
+    }
+    .img {
+        display: flex;
+        align-items: center;
+        height: 200px;
+        border: 1px solid #ccc;
+        &:hover {
+            border: 1px solid #2196F3;
+        }
+        img {
+            width: 100%;
+            height: auto;
+        };
+        video {
+            width: 150px;
+            height: 200px;
+        }
+    }
+}

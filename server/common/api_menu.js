@@ -1,3 +1,4 @@
+//员工管理
 const staffApi = {
     staff: {method: 'GET', url: 'staffInfo'},
     staff_add: {method: 'POST', url: 'addStaff'},
@@ -5,18 +6,19 @@ const staffApi = {
     staff_put: {method: 'PUT', url: 'putStaff'},
     staff_delete: {method: 'DELETE', url: 'deleteStaff'}
 }
-
+// 用户登录管理
 const userApi = {
     user: {method: 'GET', url: 'userInfo'},
     user_sign_in: {method: 'POST', url: 'login'},
     user_sign_out: {method: 'GET', url: 'loginOut'},
 
 }
-
+// 网站基本数据
 const webInfoApi = {
-    web: {method: 'GET', url: 'webPreviewInfo'}
+    web: {method: 'GET', url: 'webPreviewInfo'},
+    web_page_link: {method: 'GET', url: 'webPageLink'},
 }
-
+// 文章管理
 const articleApi = {
     article: {method: 'GET', url: 'articleInfo'},
     article_list: {method: 'GET', url: 'articleList'},
@@ -39,12 +41,20 @@ const imgApi = {
     img_classes_delete: {method: 'DELETE', url: 'imgClasses'},
 }
 
+// 自定义装修管理
+const webDecorateApi = {
+    create_decorate: {method: 'POST', url: 'webDecorate'},
+    get_decorate: {method: 'GET', url: 'webDecorate'},
+    put_decorate: {method: 'PUT', url: 'webDecorate'},
+}
+
 const apiConfig = {
     ...staffApi,
     ...userApi,
     ...webInfoApi,
     ...articleApi,
-    ...imgApi
+    ...imgApi,
+    ...webDecorateApi,
 }
 
 

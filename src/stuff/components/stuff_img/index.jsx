@@ -2,7 +2,8 @@ import React,{ Component } from 'react';
 import { Icon,Modal,Input } from 'antd';
 import Proptypes from 'prop-types';
 
-import TreeSelect from '../tree_select';
+import {imageFix} from 'common/conf/constant';
+import TreeSelect from 'components/tree_select';
 import { style } from './index.scss';
 
 
@@ -73,8 +74,7 @@ class ImgItem extends Component {
 
 
     render() {
-        const { imagesClass, _id} = this.props;
-        const url = `http://localhost:3000${this.props.url}`;
+        const { imagesClass, _id, url} = this.props;
         const { visible,showLargeImg, alt, name, tag } = this.state;
         const editFromProps = {
             alt,
@@ -87,7 +87,7 @@ class ImgItem extends Component {
         return (
             <div className={style}>
                 <div className="img">
-                    <img src={url} title={alt} alt={name} />
+                    <img src={`${imageFix}${url}`} title={alt} alt={name} />
                 </div>
                 <div className="img-warp" title={alt}>
                     <Icon type="eye" onClick={() => this.setState({showLargeImg: true})} />

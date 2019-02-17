@@ -12,11 +12,11 @@ export const getWebPageLink = () => {
     return axios.get('/api/webPageLink').then(res => res.data);
 }
 
-export const signIn = (pramer) => {
-    return axios.post('/api/login',{...pramer}).then(res => {
-        console.log(res);
-        return res.data;
-    })
+// 获取网站基本数据
+export const getWebBaseInfo = () => {
+    return axios.get('/api/webInfo').then(res => res.data)
 }
-
-export default {getWebPreviewInfo,signIn}
+// 更新网站基本数据
+export const putWebBaseInfo = (params) => {
+    return axios.put('/api/webInfo',params).then(res => res.data)
+}

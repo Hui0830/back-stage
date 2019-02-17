@@ -6,6 +6,7 @@ import { responseCode } from '../conf/constant';
 axios.interceptors.request.use(function (config) {
     const token = localStorage.getItem('token');
     config.headers.common['Authorization'] = 'Bearer ' + token;
+    console.log(config)
     return config;
   }, function (error) {
     return Promise.reject(error);

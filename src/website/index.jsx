@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react';
-import { Skeleton,Tabs,Icon,Divider,Button,message } from 'antd';
+import { Skeleton,Tabs,Icon,message } from 'antd';
 
 import { createDecorate,putDecorate,getHomeDecorate } from 'Api/decorate';
-import { getWebPageLink } from 'Api/store';
+import { getWebPageLink } from 'Api/web';
 
 import TipTitle from 'components/tip_title';
 import WebHeader from './components/header';

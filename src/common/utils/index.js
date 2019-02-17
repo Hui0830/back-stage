@@ -1,5 +1,4 @@
 export const getParseDate = (time,sign = "-") => {
-    console.log('time,',time,sign);
     const date = time ? new Date(time) : new Date();
     
     const year = date.getFullYear(),
@@ -30,4 +29,3 @@ export const getParseDate = (time,sign = "-") => {
     const fullTime = year + sign + month + sign + day + " " + `${hour}:${minutes}:${seconds}  ${week}`;
     return {year, month, day, week, hour, minutes, seconds, fullTime};
 }
-

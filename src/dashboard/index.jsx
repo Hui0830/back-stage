@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { List, Icon } from 'antd';
 import { withRouter } from 'react-router'
 
-import { getWebPreviewInfo } from 'Api/store';
+import { getWebPreviewInfo } from 'Api/web';
 import { Overview, OverviewItem, OverviewTitle } from '../components/overview';
 import { style } from './index.scss';
 

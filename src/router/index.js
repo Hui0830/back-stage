@@ -16,6 +16,7 @@ import recruit from './routes/recruit';
 import stuff from './routes/stuff';
 import website from './routes/website';
 import article from './routes/article';
+import product from './routes/product';
 import MyLayout from 'components/layout'
 import Login from '../login';
 
@@ -32,6 +33,7 @@ const routes = [
 	...stuff,
 	...website,
 	...article,
+	...product
 ]
 
 function PrivateRoute({ component: Component,isAuthenticated,userInfo,loginOut, ...rest }) {

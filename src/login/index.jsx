@@ -7,7 +7,7 @@ import { withRouter } from 'react-router-dom';
 import { style } from './index.scss';
 import logo from '../images/favicon.png';
 
-import {signIn } from 'Api/store';
+import {signIn } from 'Api/user';
   
 const FormItem = Form.Item;
 
@@ -31,6 +31,10 @@ class LoginForm extends PureComponent {
                 }else{
                     message.error(res.msg);
                 }
+                this.setState({
+                    loading: false
+                })
+            }).catch(err => {
                 this.setState({
                     loading: false
                 })

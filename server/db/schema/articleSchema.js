@@ -71,7 +71,6 @@ articleSchema.statics = {
     // 修改
     putArticle: function(pramas) {
         const { articleId ,status, tag, title, describe, content, author } = pramas;
-        console.log(new Date())
         return this.findByIdAndUpdate(
             {_id: articleId},
             {status,tag, title,content,describe, time: new Date(),author}

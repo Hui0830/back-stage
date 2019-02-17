@@ -14,9 +14,9 @@ const sendHandle = () => {
     
     // 处理请求失败方法
     const renderError = ctx => {
-        return (code = responseCode.UN_KNOWN, msg) => {
+        return (code = responseCode.UN_KNOWN, msg, status = 500) => {
             ctx.set('Content-Type', 'application/json');
-            ctx.status = code;
+            ctx.status = status;
             ctx.body = {
                 code,
                 data: null,

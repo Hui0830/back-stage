@@ -1,6 +1,9 @@
 import React,{Component} from 'react';
 import { Input, Spin, Tag, Modal,Divider,Popconfirm,Button,Icon,Form } from 'antd';
 
+import { getWebBaseInfo,putWebBaseInfo } from 'Api/web';
+import { WEB_SEO_INFO, WEB_BASE_INFO } from 'common/conf/constant';
+
 import TipTitle from 'components/tip_title';
 import UploadAvatar from 'components/upload_avatar';
 import favicon from '../../images/favicon.png';
@@ -8,9 +11,10 @@ import { style } from './index.scss';
 
 const FormItem = Form.Item;
 
-const RowInfo = ({l, r, type, isEdit}) => {
-    const isIcon = type == 'img';
-    const isText = (type == 'title') || (type == 'author');
+
+const RowInfo = ({l, r, type, isEdit, tip,onChange}) => {
+    const isIcon = ['logo', 'favicon'].includes(type);
+    const isText = ['title', 'name', 'tel', 'author','copyright'].includes(type);
     return (
         <div className="row">
             <span className="col-l" >{l}：</span>
@@ -18,15 +22,16 @@ const RowInfo = ({l, r, type, isEdit}) => {
                 {
                     isEdit ?
                         (isIcon ? 
-                            <UploadAvatar imageUrl={r} /> : 
+                            <UploadAvatar name={type} onChange={(url) => onChange(type,url)} imageUrl={r} /> : 
                             (isText ? 
-                                <Input defaultValue={r}/> : 
-                                <Input.TextArea defaultValue={r} autosize={{ minRows: 2, maxRows: 6 }} />
+                                <Input onChange={(e) => onChange(type, e)} defaultValue={r} placeholder={l}/> : 
+                                <Input.TextArea onChange={(e) => onChange(type, e)} defaultValue={r} placeholder={l} autosize={{ minRows: 2, maxRows: 6 }} />
                             )
                         ) :
-                        (isIcon ? <img src={r} /> : r)
+                        (isIcon ? <span className="image"><img src={r} /></span> : r)
                 }
             </div>
+            {isEdit && <div className="tip">*{tip}</div>}
         </div>
     );
 }
@@ -38,7 +43,7 @@ const Links = ({links,onEditLinks,onDelete,isEdit}) => {
                 {
                     links.map(item => {
                         return (
-                            <Tag key={item.link} closable={isEdit} onClose={onDelete} onClick={() => onEditLinks('edit',item)}>
+                            <Tag key={`${item._id}_${item.name}`} closable={isEdit} onClose={onDelete} onClick={() => onEditLinks('edit',item)}>
                                 {item.name}
                             </Tag>
                         )
@@ -57,12 +62,27 @@ const Links = ({links,onEditLinks,onDelete,isEdit}) => {
         </div>
     );
 }
-const ModalForm = Form.create()(({form, links, isAdd, handleSubmit}) => {
+const ModalForm = Form.create()(({form,isEdit,onClose, link = {}, onLinkSave}) => {
     const formItemLayout = {
-        labelCol: { span: 3 },
-        wrapperCol: { span: 20 },
+        labelCol: {
+            xs: { span: 24 },
+            sm: { span: 4 },
+          },
+          wrapperCol: {
+            xs: { span: 24 },
+            sm: { span: 20 },
+          },
     };
-    const { getFieldDecorator } = form;
+    const { getFieldDecorator } = form
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        form.validateFields((err, values) => {
+          if (!err) {
+            onLinkSave(link._id || '',values);
+            onClose();
+          }
+        });
+    };
     return (
     <Form onSubmit={handleSubmit}>
         <FormItem
@@ -70,60 +90,71 @@ const ModalForm = Form.create()(({form, links, isAdd, handleSubmit}) => {
             label="网站名称"
         >
             {getFieldDecorator('name', {
-            rules: [{ required: true, message: 'Please input your phone number!' }],
+                rules: [{ required: true, message: '链接呢称!' }],
+                initialValue: link ? link.name : '',
             })(
-            <Input   placeholder="Autosize height based on content lines" />
+            <Input disabled={!isEdit}  style={{width: 250,marginLeft: 20}}  placeholder="链接呢称" />
             )}
         </FormItem>
         <FormItem
             {...formItemLayout}
             label="网站地址"
         >
-            {getFieldDecorator('link', {
-            rules: [{ required: true, message: 'Please input your phone number!' }],
+            {getFieldDecorator('url', {
+            rules: [{ required: true, message: '请输入网站地址!' }],
+            initialValue: link ? link.url : '',
             })(
-            <Input   placeholder="Autosize height based on content lines" />
+            <Input disabled={!isEdit} style={{width: 250,marginLeft: 20}}   placeholder="网站地址" />
             )}
         </FormItem>
-        <FormItem className="submit-btn">
-            <Button type="primary" htmlType="submit">{`确认${isAdd ? '添加' : '修改'}`}</Button>
-            <Button type="primary" ghost>取消</Button>
-        </FormItem>
+        {isEdit && <div className="submit-btn">
+            <Button htmlType="submit">{`${!link.name ? '添 加' : '修 改'}`}</Button>
+        </div>}
     </Form>
     )
 })
-const WEB_MAP = {
-    img: '网站Icon',
-    title: '网站标题',
-    keyword: '关键字',
-    description: '网站简介',
-    author: '作者',
-}
+
 class SeoEdit extends Component {
     state = {
         webInfo: {
-            img: favicon,
-            title: '贝美',
-            keyword: '星婴没科技有限公司',
-            description:'外贸',
-            author: '@李文辉',
+            logo: favicon,
+            favicon: favicon,
+            title: '',
+            keywords: '',
+            description:'',
+            author: '@',
+            name: '',
+            tel: '',
+            address: '',
+            copyright: '',
+            links: [
+                {
+                    url:'www.baidu.com',
+                    name: '百度',
+                },
+            ]
         },
         isEdit: false,
-        links: [
-            {
-                link:'www.baidu.com',
-                name: '百度',
-            },
-        ],
         loading: false,
     }
     componentDidMount() {
+        this.getWebInfo();
+    }
+    // 获取网站基本数据
+    getWebInfo = () => {
         this.setState({
             loading: true
         })
-        setTimeout(this.setState({
-            loading: false
-        }), 3000)
+        getWebBaseInfo().then(res => {
+            this.setState({
+                loading: false,
+                webInfo: res.data
+            })
+        }).catch(err => {
+            this.setState({
+                loading: false
+            })
+        })
     }
     // 编辑链接
     /**
@@ -132,21 +163,46 @@ class SeoEdit extends Component {
      * type = 'add'    添加模式；
      * type不传直接返回
      */
-    handleSubmit = (val,e) => {
-        console.log(val);
-        return false;
-    }
-    onEditLinks = (type ,links = {}) => {
-        console.log(links);
-        if(!type) {
-            return;
+    onLinkSave = (id,value) => {
+        const { webInfo } = this.state;
+        const { links } = webInfo;
+        let afterLinks = links.slice();
+        if(id) {
+            afterLinks.map(item => {
+                if(item.id === id) {
+                    return {
+                        ...item,
+                        ...value
+                    }
+                }
+                return item
+            })
+        } else {
+            if(afterLinks.filter(v => v.name == value.name).length > 0){
+                message.info('添加链接已存在！');
+                return;
+            }
+            afterLinks.push({...value})
         }
-        const isAdd = type === 'add',
-            isEdit = type === 'edit';
-        Modal.info({
-            title: isEdit ? '链接编辑' : '添加链接',
+        this.setState({
+            webInfo: {
+                ...webInfo,
+                links: afterLinks
+            }
+        })
+    }
+    onEditLinks = (type ,link = {}) => {
+        const isAdd = type === 'add';
+        const destroyModal = (modal) => {
+            modal.destroy();
+        }
+        const modal = Modal.info({
+            title: !isAdd ? '链接编辑' : '添加链接',
             iconType: "share-alt",
-            content: <ModalForm isAdd={isAdd} links={links} handleSubmit={this.handleSubmit} />,
+            okText: '取  消',
+            width: 500,
+            className: 'linksModal',
+            content: <ModalForm isEdit={this.state.isEdit} onClose={() => {destroyModal(modal)}} link={link} onLinkSave={this.onLinkSave} />,
         })
     }
     // 链接删除
@@ -158,25 +214,57 @@ class SeoEdit extends Component {
     }
     // 编辑
     onEdit = () => {
-        console.log(this.state.isEdit);
         this.setState({
             isEdit: !this.state.isEdit,
         })
     }
+    // input
+    onChange = (type, e) => {
+        const val = ['favicon','logo'].includes(type) ? e : e.target.value;
+        this.setState({
+            webInfo: {...this.state.webInfo, [type]: val}
+        })
+    }
     // 保存修改
     onSave = () => {
+        const data = this.state.webInfo;
+        putWebBaseInfo({data}).then(res => {
+            console.log('更新网站基本数据',res)
+        })
         this.setState({
             isEdit: false,
         })
+        
     }
     render() {
-        const { webInfo, isEdit, links,loading } = this.state;
+        const { webInfo, isEdit,loading } = this.state;
+        const { links, ...web } = webInfo;
         return (
             <Spin spinning={loading}>
                 <TipTitle title='基本设置' />
                 <div className={style}>
                 {
-                    Object.keys(webInfo).map(key => <RowInfo key={key} l={WEB_MAP[key]} r={webInfo[key]} type={key} isEdit={isEdit} />)
+                    WEB_BASE_INFO.map(item => 
+                        <RowInfo
+                            key={item.key}
+                            l={item.name}
+                            r={web[item.key]}
+                            type={item.key}
+                            tip={item.tip}
+                            onChange={this.onChange}
+                            isEdit={isEdit} />)
+                }
+                <TipTitle title='SEO设置' />
+                {
+                    WEB_SEO_INFO.map(item => 
+                        <RowInfo
+                            key={item.key}
+                            l={item.name}
+                            r={web[item.key]}
+                            type={item.key}
+                            tip={item.tip}
+                            onChange={this.onChange}
+                            isEdit={isEdit} />)
                 }
                 <Links isEdit={isEdit} links={links} onEditLinks={this.onEditLinks} onDelete={this.onDelete}  />
                 <Divider />

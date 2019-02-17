@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import { Upload, Icon, message,Modal } from 'antd';
+
+const token = localStorage.getItem('token');
+
 require('./index.scss');
 
 function getBase64(img, callback) {
@@ -17,7 +20,7 @@ function beforeUpload(file) {
   if (!isLt2M) {
     message.error('图片大小必须小于2M!');
   }
-  return isJPG && isLt2M;
+  return false;
 }
 
 class UploadAvatar extends Component {
@@ -27,22 +30,24 @@ class UploadAvatar extends Component {
         previewImage: this.props.imageUrl,
         fileList: [{
             uid: '-1',
-            name: 'xxx.png',
+            name: this.props.name || 'logo',
             status: 'done',
             url: this.props.imageUrl,
         }],
     };
 
     handleChange = (info) => {
-        if (info.file.status === 'done') {
-            getBase64(info.file.originFileObj, imageUrl => this.setState({
-                imageUrl,
-                loading: false,
-            }));
-        }
         if (info.file.status === 'removed') {
             this.setState({ 
                 imageUrl: '',
+            });
+        } else {
+            getBase64(info.file, imageUrl => {
+                this.props.onChange(imageUrl);
+                this.setState({
+                    imageUrl,
+                    loading: false,
+                });
             });
         }
         this.setState({
@@ -70,7 +75,6 @@ class UploadAvatar extends Component {
                 name="avatar"
                 listType="picture-card"
                 className="avatar-uploader"
-                action="//jsonplaceholder.typicode.com/posts/"
                 beforeUpload={beforeUpload}
                 onPreview={this.handlePreview}
                 onChange={this.handleChange}

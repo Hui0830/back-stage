@@ -5,13 +5,15 @@ import {
     Button,
 } from 'antd';
 
-const ContactUsForm = ({form,onSave}) => {
+import { createNews } from 'Api/news';
+
+const ContactUsForm = ({form}) => {
     const  {getFieldDecorator} = form;
     const handleSubmit = (e) => {
         e.preventDefault();
         form.validateFields((err, values) => {
           if (!err) {
-              onSave(values);
+              createNews({...values,type: '1'})
               console.log('Received values of form: ', values);
           }
         });
@@ -52,7 +54,7 @@ const ContactUsForm = ({form,onSave}) => {
                 label="mail"
             >
                 {
-                    getFieldDecorator('email', {
+                    getFieldDecorator('mail', {
                         rules: [
                             {
                             type: 'email', message: 'The input is not valid E-mail!',
@@ -61,37 +63,37 @@ const ContactUsForm = ({form,onSave}) => {
                                 required: true, message: 'Please input your E-mail!',
                             },
                         ],
-                    })(<Input placeholder="Your email" style={{width: 520, }} />)
+                    })(<Input placeholder="Your mail" style={{width: 520, }} />)
                 }
             </Form.Item>
             <Form.Item
-                label="phone"
+                label="tel"
             >
                 {
-                    getFieldDecorator('phone', {
+                    getFieldDecorator('tel', {
                         rules: [
                             {
-                                pattern: /^1[34578]\d{9}$/gi, message: 'The input is not valid phone!',
+                                pattern: /^1[34578]\d{9}$/gi, message: 'The input is not valid tel!',
                             },
                             {
-                                required: true, message: 'Please input your phone!',
+                                required: true, message: 'Please input your tel!',
                             },
                         ],
-                    })(<Input placeholder="Your phone" style={{width: 520, }} />)
+                    })(<Input placeholder="Your tel" style={{width: 520, }} />)
                 }
             </Form.Item>
             <Form.Item
                 label="Reason"
             >
                 {
-                    getFieldDecorator("descript", {
+                    getFieldDecorator("content", {
                         validateTrigger: ['onChange', 'onBlur'],
                         rules: [{
                             required: true,
                             whitespace: true,
-                            message: '描述不能为空!'
+                            message: '问题不能为空!'
                         }],
-                    })(<Input.TextArea placeholder="描述"  style={{ width: 520, minHeight: 100,}} />)
+                    })(<Input.TextArea placeholder="问题/留言描述"  style={{ width: 520, minHeight: 100,}} />)
                 }
             </Form.Item>
             <div style={{textAlign: 'center',margin: '50px 0px 20px'}}>

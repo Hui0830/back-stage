@@ -2,24 +2,15 @@ import React, { Component } from 'react';
 import { getParseDate } from 'utils'
 import {
     Icon,
-    Modal
+    Modal,
+    Spin,
+    Pagination,
 } from 'antd'
+
+import { getNews,deleteNews } from 'Api/news';
 
 import Empty from 'components/empty';
 import { style } from './index.scss'
-
-let data = [];
-for(let i = 2; i < 30; i++) {
-    data.push({
-        uid: i,
-        firstName: 'li',
-        lastName: '文辉',
-        time: `2018-12-${i} 10:${i}:00`,
-        content: '九分裤哈看到房间号尽快回复卡绝代风华看客户肌肤都可发货了减肥挥洒的克己复礼看见法兰克福陆海空军粉红色的卡就好看见好看黑科技好渴',
-        mail: '1285227393@qq.com',
-        tel: '15727785909'
-    })
-}
 
 const NewItem = ({firstName, lastName, time, content, mail, tel, uid, onDelete}) => {
     return (
@@ -40,12 +31,40 @@ const NewItem = ({firstName, lastName, time, content, mail, tel, uid, onDelete})
 
 class News extends Component {
     state = {
-        newData: data.slice(0, 20),
+        data: [],
         timeSort: 0,
+        loading: true,
+        pageSize: 3,
+        current: 1,
+        total: 0,
+        listCache: {},
+        lastId: ''
+        
+    }
+
+    componentDidMount() {
+        this.getNewsList()
+    }
+
+    getNewsList = (_id = '') => {
+        const { pageSize, current,listCache,timeSort } = this.state;
+        getNews(_id,pageSize,timeSort).then(res => {
+            const { list } = res.data;
+            this.setState({
+                loading: false,
+                data: list,
+                lastId: list.length> 0 ? list[list.length-1]._id : '',
+                listCache: {...listCache, [current]: list}
+            })
+        }).catch(err => {
+            this.setState({
+                loading: false
+            })
+        })
     }
 
     onDelete = (uid) => {
-        if(!this.state.newData.length){
+        if(!this.state.data.length){
             return;
         }
         Modal.confirm({
@@ -54,45 +73,80 @@ class News extends Component {
             okText: '删除',
             okType: 'danger',
             cancelText: '取消',
-            onOk: () => {
-                let data = [];
-                if(uid) {
-                    data = this.state.newData.filter(item => item.uid !== uid)
-                }
-                console.log(uid,data)
-                this.setState({
-                    newData: data,
-                })
-            },
+            onOk: () => this.deleteHandle(uid),
         })
         
     }
 
-    onSort = () => {
-        this.setState({
-            newData: this.state.newData.sort((a, b) => {
-                const second_a = new Date(a);
-                const second_b = new Date(b);
-                return second_a.getSeconds() - second_b.getSeconds();
-            }),
-            timeSort: this.state.timeSort ? 0 : 1
+    // 删除图片
+    deleteHandle = (_id) => {
+        deleteNews(_id).then(res => {
+            const { listCache, current } = this.state;
+            const listCacheKeys = Object.keys(listCache).filter(key => (key < current));
+            let page = current;
+            const len = listCache[current].length;
+            console.log(listCache)
+            if( len=== 1 && current !== 1) {
+                this.setState({
+                    current: page - 1
+                })
+            } else {
+                this.setState({
+                    lastId: listCache[current][0]._id,
+                    listCache: listCacheKeys.map(key => listCache[key])
+                }, () => this.getNewsList(this.state.lastImgId))
+            }
+            message.success(res.msg);
         })
     }
 
+
+    onSort = () => {
+        this.setState({
+            timeSort: this.state.timeSort ? 0 : -1
+        })
+    }
+
+    onChange = (page, pageSize) => {
+        const { listCache, lastId } = this.state;
+        if(listCache[page]){
+            this.setState({
+                images: listCache[page],
+                current: page
+            })
+            return
+        }
+        this.setState({
+            current: page
+        },() => {
+            this.getNewsList(lastId)
+        })
+      }
+
     render() {
-        const { newData,timeSort } = this.state;
+        const { data,timeSort,loading,current,total,pageSize } = this.state;
         return (
            <div className={style}>
                 <div className="top">
                     <span onClick={() => this.onSort('time')}>时间排序: <Icon type={timeSort ? "arrow-up" : "arrow-down"} /></span>
-                    <span className="delete-all" onClick={() => this.onDelete()}>一键清空<Icon type="delete" /></span>
+                    <span className="delete-all" onClick={() => this.onDelete('all')}>一键清空<Icon type="delete" /></span>
                 </div>
-                <div className="content">
-                    {
-                        newData.map(item => <NewItem {...item} onDelete={this.onDelete} />)
-                    }
-                </div>
-                <Empty isEmpty={newData.length === 0} />
+                <Spin spinning={loading}>
+                    <div className="content">
+                        {
+                            data.map(item => <NewItem {...item} onDelete={() =>this.onDelete(item._id)} />)
+                        }
+                    </div>
+                    <Empty isEmpty={data.length === 0} />
+                </Spin>
+                    <Pagination
+                        defaultCurrent={1}
+                        hideOnSinglePage
+                        current={current}
+                        onChange={this.onChange}
+                        total={total}
+                        pageSize={pageSize}
+                    />
            </div>
         )
     }

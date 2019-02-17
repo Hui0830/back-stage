@@ -43,6 +43,24 @@ const menu = {
             },
         },
     },
+    product: {
+        mid: 'product',
+        key: 'product',
+        href: '/product',
+        text: '产品管理',
+        icon: 'shopping',
+        subMenu: {
+            add: {
+                name: '产品发布',
+                href: 'product/add',
+                default: true,
+            },
+            drafts: {
+                name: '仓库管理',
+                href: 'product/drafts',
+            },
+        },
+    },
     article: {
         mid: 'article',
         key: 'article',
@@ -126,6 +144,8 @@ const breadcrumbMap = {
     '/staff/user': '员工详情',
     '/article/detail': '文章详情',
     '/article/edit': '文章编辑',
+    '/product/info': '产品详情',
+    '/product/edit': '产品编辑'
 };
 // 面包屑/根据用户角色权限动态导航
 Object.keys(menu).forEach(key => {

@@ -1,19 +1,11 @@
 :local(.style) {
     height: 100%;
-    position: relative;
     background-color: #f8f8f8;
-    .add-tree {
-        height: 30px;
-        line-height: 27px;
-        text-align: center;
-        font-size: 20px;
-        margin-top: 30px;
-        border: 1px dashed #e0e0e0;
-        width: 100%;
-        transition: all 0.3s ease-in;
-        cursor: pointer;
-        &:hover {
-            background: #daf0fb;
-        }
+    .class-title {
+        line-height: 2.5em;
+        background: #f8f8f8;
+        border-bottom: 1px solid #e6e6e6;
+        margin-bottom: 20px;
+        text-align: center
     }
 }

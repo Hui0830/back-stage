@@ -22,7 +22,6 @@ export default {
     [getRouterApi('create_decorate')]: async (ctx) => {
         const data = ctx.request.body;
         const { name,nav,type,about,purpose,contact,introduction,address,staff,carousel,product,productNav } = data;
-        console.log(nav,about,purpose,introduction,staff,carousel,product);
         const result = await webDecorateModel.create({
             name,
             type,

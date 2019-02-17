@@ -68,4 +68,20 @@ export const ARTICLE_STATUS = {
 
 /***************  文章-----end  ***************/
 
+/***  网站基本信息 */
+export const WEB_BASE_INFO = [
+    {key: 'logo',name: 'LOGO', tip: '网站的LOGO图标，建议png格式,图片不易过大控制24K内'},
+    {key: 'favicon',name: 'favicon', tip: '网站的图标.favicon格式，格式24*24，42*42，图片不易过大控制24K内'},
+    {key: 'author',name: '作者', tip: '描述网站的开发者，作者'},
+    {key: 'address',name: '公司地址', tip: '公司的地址'},
+    {key: 'tel',name: '联系电话', tip: '集团负责人联系电话'},
+    {key: 'name',name: '联系人', tip: '集团负责人'},
+    {key: 'copyright',name: '版权©️', tip: '网站版权'},
+]
+export const WEB_SEO_INFO = [
+    {key: 'title',name: '网站标题', tip: '网站的标题,SEO影响最大的选项之一，建议把网站的核心关键词或者品牌、公司的名称写上去，一般是以"关键词+公司名称或品牌"的格式或公司名'},
+    {key: 'keywords',name: '关键字', tip: '网站的关键词，建议把重要的关键词放在前面，依次往后排序，一般是4到5个，关键词之间用英文的逗号隔开，切勿堆砌关键词，控制70个字符以下'},
+    {key: 'description',name: '网站简介', tip: '描述网站是做什么的，建议包含公司名称、主要产品和关键词、联系电话，一些长尾词也是可以出现在描述中的；建议限制在80个字'},
+]
+
 export const imageFix = 'http://plk956cz3.bkt.clouddn.com/'

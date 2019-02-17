@@ -17,6 +17,8 @@ const userApi = {
 const webInfoApi = {
     web: {method: 'GET', url: 'webPreviewInfo'},
     web_page_link: {method: 'GET', url: 'webPageLink'},
+    put_web_base_set: {method: 'PUT', url:'webInfo'},
+    get_web_base_set: {method: 'GET', url: 'webInfo'},
 }
 // 文章管理
 const articleApi = {
@@ -48,13 +50,36 @@ const webDecorateApi = {
     put_decorate: {method: 'PUT', url: 'webDecorate'},
 }
 
+// 消息管理
+const webNewsApi = {
+     create_news: {method: 'POST', url: 'createNews'},
+     delete_news: {method: 'DELETE', url: 'deleteNews'},
+     get_list_news: {method: 'GET', url: 'getNews'}
+}
+
+// 产品管理
+const productApi = {
+    product: {method: 'GET', url: 'productInfo'},
+    product_list: {method: 'GET', url: 'productList'},
+    product_add: {method: 'POST', url: 'addProduct'},
+    product_put: {method: 'PUT', url: 'putProduct'},
+    product_delete: {method: 'DELETE', url: 'deleteProduct'}, // @params productId
+    product_drafts: {method: 'GET', url: 'productDrafts'}, // @params status = 0
+    product_class: {method: 'GET', url: 'productClass'}, 
+    product_class_add: {method: 'POST', url: 'productClass'},
+    product_class_delete: {method: 'DELETE', url: 'productClass'},
+    product_class_put: {method: 'PUT', url: 'productClass'},
+}
+
 const apiConfig = {
     ...staffApi,
     ...userApi,
     ...webInfoApi,
     ...articleApi,
+    ...productApi,
     ...imgApi,
     ...webDecorateApi,
+    ...webNewsApi
 }
 
 

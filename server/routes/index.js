@@ -8,6 +8,8 @@ import staff from './staff';
 import article from './article';
 import uploade from './uploade';
 import webDecorate from './web_decorate';
+import news from './news';
+import product from './product';
 
 const routes = {
     ...user,
@@ -15,7 +17,9 @@ const routes = {
     ...staff,
     ...article,
     ...uploade,
-    ...webDecorate
+    ...webDecorate,
+    ...news,
+    ...product
 }
 
 router.use('/api/*', auth);

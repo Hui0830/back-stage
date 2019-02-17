@@ -1,4 +1,4 @@
-const { imgClassSchema } = require('../schema/imagesSchema'),
+const imgClassSchema = require('../schema/classSchema'),
     mongoose = require('mongoose');
 
 

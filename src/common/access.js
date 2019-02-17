@@ -23,7 +23,7 @@ const dashboardConfig = {
     dashboard: all,
     dashboard_warn_tip: [creater, superAdmin], // 工作台警告提示
 };
-
+// 员工管理
 const staffConfig = {
     staff: [superAdmin, admin],
     staff_list: [superAdmin, admin],
@@ -32,16 +32,21 @@ const staffConfig = {
     staff_edit: [superAdmin],
     staff_info: [superAdmin, admin]
 }
-
+// 网站编辑管理
 const websiteConfig = {
     website_decorate: [superAdmin, admin,webEditor],
     website_seo: [superAdmin, admin],
 }
-
+// 产品管理
+const productConfig = {
+    product_edit: [superAdmin,admin],
+    product_add: [superAdmin,admin]
+}
+// 消息管理
 const newsConfig = {
     new: [superAdmin, admin],
 }
-
+// 招聘管理
 const recruitConfig = {
     recruit: [superAdmin, admin]
 }
@@ -51,7 +56,8 @@ const accessConfig = {
     ...staffConfig,
     ...websiteConfig,
     ...newsConfig,
-    ...recruitConfig
+    ...recruitConfig,
+    ...productConfig
 };
 
 // 是否拥有模块在、操作权限

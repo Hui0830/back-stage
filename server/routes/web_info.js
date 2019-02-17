@@ -1,4 +1,6 @@
 const {getRouterApi} = require('../common/api_menu');
+const webInfoModel = require('../db/models/web_info_model');
+const { responseCode } = require('../common/const');
 
 export default {
     [getRouterApi('web')]: async (ctx, next) => {
@@ -22,5 +24,18 @@ export default {
             {name: '联系我们', url: '/concat', _id: 5},
         ];
         ctx.send(data)
+    },
+    [getRouterApi('put_web_base_set')]: async (ctx) => {
+        const { id,data } = ctx.request.body;
+        const select = {};
+        if(id) {
+            select._id = id;
+        }
+        const result = await webInfoModel.updateOne({...select}, {...data},{upsert: true});
+        return result !== null ? ctx.send(result) : ctx.sendError(responseCode.UN_KNOWN, '修改失败');
+    },
+    [getRouterApi('get_web_base_set')]: async (ctx) => {
+        const result = await webInfoModel.findOne({});
+        return result !== null ? ctx.send(result) : ctx.sendError(responseCode.UN_KNOWN);
     }
 }

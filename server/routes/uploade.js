@@ -45,10 +45,11 @@ export default {
         return result !== null ? ctx.send(result, '图片分类创建成功') : ctx.sendError(responseCode.UN_KNOWN, '图片分类创建失败');
     },
     [getRouterApi('uploade_img')]: async (ctx, next) => {
-        const file =  ctx.request.files.file;
+        let file =  ctx.request.files.file || ctx.request.files.avatar;
+        const files = ctx.request.files;
+        Object.keys(files).forEach(key => file = files[key])
         const { tag } = ctx.request.body;
         const savePath = path.join(__dirname,`../../dist/resource/`);
-
         // 上传图片到服务器
         const result = await uploadFile({
             file,
@@ -70,7 +71,7 @@ export default {
         }
         const promise = imagesModel.create({...createModelOption});
         const resData = await promise.then((doc) => doc)
-        return resData !== null ? ctx.send({...resData,promise}, '图片上传成功') : ctx.sendError(responseCode.UN_KNOWN, '图片上传失败');
+        return resData !== null ? ctx.send({...resData}, '图片上传成功') : ctx.sendError(responseCode.UN_KNOWN, '图片上传失败');
       },
       [getRouterApi('img_list')]: async (ctx) => {
             const { tag,pageSize = 4,_id } = ctx.query;

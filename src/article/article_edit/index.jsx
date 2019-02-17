@@ -20,7 +20,7 @@ import ArticleView from  '../components/article_view';
 
 const { Option } = Select;
 const selectData = Object.keys(ARTICLE_TAG_MAP).map(key => ({id: key, name: ARTICLE_TAG_MAP[key]}));
-
+const token = localStorage.getItem('token');
 let editor;
 class ArticleEdit extends PureComponent {
     static defaultProps = {
@@ -44,7 +44,17 @@ class ArticleEdit extends PureComponent {
                     content: html
                 })
             },
-            uploadImgServer: '/upload',
+            uploadImgServer: '/api/uploadeImg',
+            uploadImgHeaders: {
+                Authorization: `Bearer ${token}`
+            },
+            uploadImgHooks: {
+                customInsert: function (insertImg, result, editor) {
+                    console.log(result)
+                    var url = result.data._doc.url;
+                    insertImg(`http://plk956cz3.bkt.clouddn.com/${url}`)
+                }
+            }
         }
         editor.create();
         editor.txt.html('<p>文章正文内容</p>');

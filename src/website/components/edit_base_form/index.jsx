@@ -4,7 +4,6 @@ import {
     Input,
     Button,
     Icon,
-    Select
 } from 'antd';
 
 import { selectStaff } from 'components/select_staff';

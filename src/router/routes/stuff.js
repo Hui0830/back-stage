@@ -1,14 +1,12 @@
-import Stuff from '../../stuff';
-import StuffVideo from '../../stuff/video';
 
 export default [{
     path: '/stuff',
-    component: Stuff,
+    loader: () => import('pages/staff'),
     exact: true,
 },{
     path: '/stuff/img',
-    component: Stuff,
+    loader: () => import('pages/staff'),
 }, {
     path: '/stuff/video',
-    component: StuffVideo,
+    loader: () => import('pages/stuff/video'),
 }];

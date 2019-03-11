@@ -71,7 +71,7 @@ let config = merge(baseWebpackConfig,{
 	/*设置API转发*/
 	devServer: {
 		host:'0.0.0.0',
-		port: 8088,
+		port: 8080,
 		hot: true,
 		inline: true,
 		contentBase: path.resolve(__dirname,webpackFile.devDirectory),
@@ -80,13 +80,13 @@ let config = merge(baseWebpackConfig,{
 			index:'/public/index.html'
 		},
 		disableHostCheck: true,
-		proxy: [
-			{
-				context: ['/api/*'],
-				target: 'http://localhost:3000',
-				secure: true
-			},
-		],
+		// proxy: [
+		// 	{
+		// 		context: ['/api/*'],
+		// 		target: 'http://localhost:3000',
+		// 		secure: true
+		// 	},
+		// ],
 		/*打开浏览器并打开本项目网址*/
 		after() {
 			opn('http:localhost:'+this.port)

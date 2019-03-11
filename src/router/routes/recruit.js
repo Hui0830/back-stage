@@ -1,13 +1,16 @@
-import Recruit from '../../recruit'
+import Recruit from 'pages/recruit'
 
 export default [{
     path: '/recruit',
-    component: Recruit,
+    loader: Recruit,
     exact: true,
+    async: true
 },{
     path: '/recruit/list',
-    component: Recruit,
+    loader: Recruit,
+    async: true
 }, {
     path: '/recruit/add',
-    component: Recruit,
+    loader: Recruit,
+    async: true
 }];

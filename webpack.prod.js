@@ -54,14 +54,6 @@ let config = merge(baseWebpackConfig, {
 				],
 				exclude: path.resolve(__dirname,' ./node_modules'),
 			},
-			// {
-			// 	test: /\.css$/,
-			// 	use: [MiniCssExtractPlugin.loader,'css-loader','postcss-loader'],
-			// 	include:[
-			// 		path.resolve(__dirname,' ./src'),
-			// 		path.join(__dirname, './node_modules/antd')
-			// 	]
-			// },
 			{
 			    test: /\.(scss|css)$/,
 			    use: [

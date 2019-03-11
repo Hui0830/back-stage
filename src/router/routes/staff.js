@@ -1,26 +1,26 @@
 import React from 'react';
-import Staff from '../../staff';
-import StaffEdit from '../../staff/edit';
-import StaffInfo from '../../staff/staff_info';
+import StaffEdit from 'pages/staff/edit';
 
 const StaffAdd  = () => <StaffEdit isEdit={false} />
 export default [{
     path: '/staff',
-    component: Staff,
+    loader: () => import('pages/staff'),
     exact: true,
 },{
     path: '/staff/list',
-    component: Staff,
+    loader: () => import('pages/staff'),
     exact: true,
 },{
     path: '/staff/add',
-    component: StaffAdd,
+    loader: StaffAdd,
     exact: true,
+    async: true
 }, {
     path: '/staff/edit/:id',
-    component: StaffEdit,
+    loader: StaffEdit,
+    async: true
     
 },{
     path: '/staff/user/:id',
-    component: StaffInfo,
+    loader: () => import('pages/staff/staff_info'),
 }];

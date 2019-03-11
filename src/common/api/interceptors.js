@@ -6,7 +6,9 @@ import { responseCode } from '../conf/constant';
 axios.interceptors.request.use(function (config) {
     const token = localStorage.getItem('token');
     config.headers.common['Authorization'] = 'Bearer ' + token;
-    console.log(config)
+    if(/^[\/api]/gi.test(config.url)) {
+      config.url = `http://localhost:3000${config.url}`
+    }
     return config;
   }, function (error) {
     return Promise.reject(error);
@@ -23,4 +25,5 @@ axios.interceptors.response.use(function (response) {
     message.error(msg);
     return Promise.reject(error);
 });
+axios.defaults.withCredentials = true
 export default axios;

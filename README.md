@@ -1,6 +1,12 @@
 # back-stage
 React网站后台管理系统搭建
 
+## 使用指南
+1. build API文档`npm run dev`；webpack-dev-server开发环境
+2. 启动开发环境：`npm run proBuild`编译生产环境代码
+3. 启动本地生成环境代码运行测试`npm run server`，`http://localhost:8080`打开可查看
+3. 初次提交远程服务器执行`npm run server:run`;远程服务器会拉取git中的master代码，进行部署；
+4. 服务器有过初始部署，之后更新提交执行`npm run server:publish`；远程服务器会拉取git中的master代码，进行部署，所以每次修改需要提交最新代码；考虑服务器有限，没有开发测试预发分支，所以修改需谨慎。
 ## 开发规范
 ### 一、分支类型和作用：
 master分支：生产环境的稳定分支，代码最权威，随时可发布。

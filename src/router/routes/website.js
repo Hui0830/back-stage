@@ -1,14 +1,11 @@
-import Website from '../../website'
-import SeoEdit from '../../website/seo';
-
 export default [{
     path: '/website',
-    component: Website,
+    loader: () => import('pages/website'),
     exact: true,
 },{
     path: '/website/decorate',
-    component: Website,
+    loader: () => import('pages/website'),
 }, {
     path: '/website/seo',
-    component: SeoEdit,
+    loader: () => import('pages/website/seo'),
 }];

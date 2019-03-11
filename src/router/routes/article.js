@@ -1,34 +1,31 @@
 import React from 'react';
 
-import ArticleList from '../../article/lists';
-import ArticleMain from '../../article/article_main';
-import ArticlaEdit from '../../article/article_edit';
-import ArticleDraft from '../../article/article_drafts';
-import Article from '../../article'
+import ArticlaEdit from 'pages/article/article_edit';
 
 const ArticleAdd = () => {
     return <ArticlaEdit isEdit={false} />
 }
-
 export default [{
     path: '/article',
-    component: Article,
+    loader: () => import('pages/article'),
     exact: true,
 }, {
     path: '/article/list',
-    component: ArticleList,
+    loader: () => import('pages/article/lists'),
     exact: true,
 }, {
     path: '/article/edit/:id',
-    component: ArticlaEdit,
+    loader: ArticlaEdit,
+    async: true
 }, {
     path: '/article/add',
-    component: ArticleAdd,
+    loader: ArticleAdd,
+    async: true
 }, {
     path: '/article/drafts',
-    component: ArticleDraft,
+    loader: () => import('pages/article/article_drafts'),
 }, {
     path: '/article/detail/:id',
     exact: true,
-    component: ArticleMain,
+    loader: () => import('pages/article/article_main'),
 }];

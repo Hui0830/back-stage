@@ -1,13 +1,16 @@
-import News from '../../news'
+import News from 'pages/news'
 
 export default [{
     path: '/news',
-    component: News,
+    loader: News,
     exact: true,
+    async: true
 },{
     path: '/news/userMessage',
-    component: News,
+    loader: News,
+    async: true
 }, {
     path: '/news/sysMessage',
-    component: News,
+    loader: News,
+    async: true
 }];

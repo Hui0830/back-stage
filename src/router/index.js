@@ -7,54 +7,20 @@ import {
 } from 'react-router-dom'
 
 
+
+
 import {getIsAuth} from 'common/utils/auth';
-import NotFound from '../not_found_page';
-import Dashboard from '../dashboard';
-import staff from './routes/staff';
-import news from './routes/news';
-import recruit from './routes/recruit';
-import stuff from './routes/stuff';
-import website from './routes/website';
-import article from './routes/article';
-import product from './routes/product';
+import NotFound from '../pages/not_found_page';
+import PrivateRoutes from './routes.js'
+
 import MyLayout from 'components/layout'
-import Login from '../login';
+import Login from '../pages/login';
 
 
 
-const routes = [
-	{
-		path: '/dashboard',
-		component: Dashboard,
-	},
-	...staff,
-	...news,
-	...recruit,
-	...stuff,
-	...website,
-	...article,
-	...product
-]
 
-function PrivateRoute({ component: Component,isAuthenticated,userInfo,loginOut, ...rest }) {
-	// console.log(Component, isAuthenticated,rest);
-	return (
-	  <Route
-		{...rest}
-		render={props =>
-			isAuthenticated ? (<Component {...props} />
-		  ) : (
-			<Redirect
-			  to={{
-				pathname: "/login",
-				state: { from: props.location }
-			  }}
-			/>
-		  )
-		}
-	  />
-	);
-}
+
+
 // React.PureComponent
 class Routes extends React.PureComponent {
 	state = {
@@ -82,15 +48,7 @@ class Routes extends React.PureComponent {
 				{
 					isAuthenticated &&
 					<MyLayout loginOut={this.loginOut} >
-					{
-						routes.map(item => (
-							<PrivateRoute
-								key={item.path}
-								{...item}
-								isAuthenticated={isAuthenticated}
-								/>
-						))
-					}
+						<PrivateRoutes isAuthenticated={isAuthenticated} />
 					</MyLayout>
 				}
 			<Route path='*' render={() => isAuthenticated ? <NotFound /> : <Redirect to="/login" />} />

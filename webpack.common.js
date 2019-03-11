@@ -11,7 +11,8 @@ module.exports = {
 			'components': path.resolve(__dirname,'./src/components'),
 			'common': path.resolve(__dirname, './src/common'),
 			'utils': path.resolve(__dirname, './src/common/utils'),
-			'Api': path.resolve(__dirname, './src/common/api'),
+            'Api': path.resolve(__dirname, './src/common/api'),
+            'pages': path.resolve(__dirname, './src/pages'),
 		}
 	},
     optimization: {

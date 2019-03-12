@@ -2,6 +2,9 @@ const merge = require('webpack-merge');//webpack合并插件
 const path = require('path');
 const baseWebpackConfig = require('./webpack.common.js');//引入webpack基础通用配置
 const webpackFile = require('./webpack.file.config.js');//引入一些webpack路径配置
+const DllReferencePlugin = require('webpack/lib/DllReferencePlugin');
+const HappyPack = require('happypack');
+const happyThreadPool = HappyPack.ThreadPool({size: 6}); //构建共享进程池，包含5个进程
 
 // 自动生成html模板文件
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -18,8 +21,8 @@ const optimizeCssPlugin = require('optimize-css-assets-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const extractSCSS = new MiniCssExtractPlugin({
-			filename: 'css/[name].[md5:contenthash:hex:8].css',
-			chunkFilename: 'css/[name]_[id].css',
+			filename: 'css/[name].[contenthash:8].css',
+			chunkFilename: 'css/[name]_[contenthash:8].css',
 			fallback:'style-loader'
 		});
 
@@ -43,25 +46,44 @@ let config = merge(baseWebpackConfig, {
 	        cssProcessorOptions: { discardComments: { removeAll: true } },
 	        canPrint: true
 		}),
+		// 告诉webpack使用了哪些动态链接库
+		new DllReferencePlugin({
+			manifest: require('./dll/react.manifest.json')
+		}),
+		new DllReferencePlugin({
+			manifest: require('./dll/librarys.manifest.json')
+		}),
+		new DllReferencePlugin({
+			manifest: require('./dll/utils.manifest.json')
+		}),
+		// happypack并行处理
+		new HappyPack({
+			// 用唯一ID来代表当前HappyPack是用来处理一类特定文件的，与rules中的use对应
+			id: 'babel',
+			loaders: ['babel-loader?cacheDirectory'],
+			threadPool: happyThreadPool
+		}),
+		new HappyPack({
+			// 用唯一ID来代表当前HappyPack是用来处理一类特定文件的，与rules中的use对应
+			id: 'css',
+			loaders: [
+				'css-loader',
+				'postcss-loader',
+				'sass-loader'],
+				threadPool: happyThreadPool
+		})
 	],
 
 	module: {
 		rules: [
 			{
 				test: /\.(js|jsx)$/,
-				use: [
-					'babel-loader',
-				],
+				use: ['happypack/loader?id=babel'],
 				exclude: path.resolve(__dirname,' ./node_modules'),
 			},
 			{
-			    test: /\.(scss|css)$/,
-			    use: [
-					MiniCssExtractPlugin.loader,
-					'css-loader',
-					'postcss-loader',
-					'sass-loader',
-				],
+			  test: /\.(scss|css)$/,
+			  use: [MiniCssExtractPlugin.loader,'happypack/loader?id=css'],
 				include:[
 					path.resolve(__dirname,'src'),
 					path.join(__dirname, './node_modules/antd')
@@ -120,6 +142,10 @@ let copyObj = [
 	// 网站favicon.ico
 	{
 		from: './src/images/favicon.ico',
+		to: './'
+	},
+	{
+		from: './dll',
 		to: './'
 	}
 ];

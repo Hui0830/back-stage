@@ -17,7 +17,7 @@ let config = merge(baseWebpackConfig,{
 		chunkFilename: 'js/[name].js',
 		publicPath: '/public/'
 	},
-	devtool: '#cheap-module-eval-source-map',
+	devtool: '#sourceMap',
 	plugins: [
 		new HtmlWebpackPlugin({
 			template:path.resolve(__dirname,'./index.html'),

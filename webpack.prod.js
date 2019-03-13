@@ -1,24 +1,20 @@
-const merge = require('webpack-merge');//webpack合并插件
-const path = require('path');
-const baseWebpackConfig = require('./webpack.common.js');//引入webpack基础通用配置
-const webpackFile = require('./webpack.file.config.js');//引入一些webpack路径配置
-const DllReferencePlugin = require('webpack/lib/DllReferencePlugin');
-const HappyPack = require('happypack');
-const happyThreadPool = HappyPack.ThreadPool({size: 6}); //构建共享进程池，包含5个进程
+const merge = require('webpack-merge'),//webpack合并插件
+	path = require('path'),
+	os = require('os'),
+	DllReferencePlugin = require('webpack/lib/DllReferencePlugin'),
+	ParallelUglifyPlugin = require('webpack-parallel-uglify-plugin'),//并行压缩js
+	HappyPack = require('happypack');
 
 // 自动生成html模板文件
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin'),
+	cleanWebpackPlugin = require('clean-webpack-plugin'),// 清除文件
+	copyWebpackPlugin = require('copy-webpack-plugin'),// webpack复制插件
+	optimizeCssPlugin = require('optimize-css-assets-webpack-plugin'),// optimizeCssPlugin CSS文件压缩插件
+	MiniCssExtractPlugin = require("mini-css-extract-plugin");// css 代码提取到独立.css文件
 
-// 清除文件
-const cleanWebpackPlugin = require('clean-webpack-plugin');
-
-// webpack复制插件
-const copyWebpackPlugin = require('copy-webpack-plugin');
-
-// optimizeCssPlugin CSS文件压缩插件
-const optimizeCssPlugin = require('optimize-css-assets-webpack-plugin');
-// css 代码提取到独立.css文件
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const baseWebpackConfig = require('./webpack.common.js'),//引入webpack基础通用配置
+	webpackFile = require('./webpack.file.config.js'),//引入一些webpack路径配置
+	happyThreadPool = HappyPack.ThreadPool({ size: os.cpus().length }); //构建共享进程池，包含5个进程
 
 const extractSCSS = new MiniCssExtractPlugin({
 			filename: 'css/[name].[contenthash:8].css',
@@ -39,19 +35,9 @@ let config = merge(baseWebpackConfig, {
 	plugins: [
 		// 提取CSS文件
 		extractSCSS,
-		// css文件压缩
-		new optimizeCssPlugin({
-			assetNameRegExp: /\.css$/g,
-	        cssProcessor: require('cssnano'),
-	        cssProcessorOptions: { discardComments: { removeAll: true } },
-	        canPrint: true
-		}),
 		// 告诉webpack使用了哪些动态链接库
 		new DllReferencePlugin({
 			manifest: require('./dll/react.manifest.json')
-		}),
-		new DllReferencePlugin({
-			manifest: require('./dll/librarys.manifest.json')
 		}),
 		new DllReferencePlugin({
 			manifest: require('./dll/utils.manifest.json')
@@ -61,7 +47,7 @@ let config = merge(baseWebpackConfig, {
 			// 用唯一ID来代表当前HappyPack是用来处理一类特定文件的，与rules中的use对应
 			id: 'babel',
 			loaders: ['babel-loader?cacheDirectory'],
-			threadPool: happyThreadPool
+			//threadPool: happyThreadPool
 		}),
 		new HappyPack({
 			// 用唯一ID来代表当前HappyPack是用来处理一类特定文件的，与rules中的use对应
@@ -70,9 +56,59 @@ let config = merge(baseWebpackConfig, {
 				'css-loader',
 				'postcss-loader',
 				'sass-loader'],
-				threadPool: happyThreadPool
-		})
+				//threadPool: happyThreadPool
+		}),
+		new optimizeCssPlugin({
+			assetNameRegExp: /\.css$/g,
+					cssProcessor: require('cssnano'),
+					cssProcessorOptions: { discardComments: { removeAll: true } },
+					canPrint: true
+		}),
 	],
+	optimization: {
+		runtimeChunk: {
+				name: 'manifest'
+		},
+
+		splitChunks: {
+				cacheGroups: {
+						common: {
+								chunks: 'initial',
+								name: 'common',
+								minChunks: 2,
+								minSize: 0,
+						},
+						vendor: {
+							test: /node_modules/,
+							chunks: 'initial',
+							name: "vendor",
+							priority: 10,
+							enforce: true,
+					}
+				}
+		},
+		minimizer: [
+			new ParallelUglifyPlugin({
+				cacheDir: '.cache/',
+				uglifyJS:{
+					output: {
+						 // 是否输出可读性较强的代码，即会保留空格和制表符，默认为输出，为了达到更好的压缩效果，可以设置为false
+						beautify: false,
+						 //是否保留代码中的注释，默认为保留，为了达到更好的压缩效果，可以设置为false
+						comments: false
+					},
+					compress: {
+						//是否在UglifyJS删除没有用到的代码时输出警告信息，默认为输出
+						warnings: false,
+						//是否删除代码中所有的console语句，默认为不删除，开启后，会删除所有的console语句
+						drop_console: true,
+						//是否内嵌虽然已经定义了，但是只用到一次的变量，比如将 var x = 1; y = x, 转换成 y = 1, 默认为否
+						collapse_vars: true,
+					}
+				},
+			}),
+		]
+},
 
 	module: {
 		rules: [
@@ -91,12 +127,9 @@ let config = merge(baseWebpackConfig, {
 			},
 			
 			{
-				test: /\.(png|jpg|jpeg|png|gif|woff|svg|eot|ttf)/,
+				test: /\.(png|jpg|jpeg|svg)/,
+				exclude: path.resolve(__dirname,' ./node_modules'),
 				loader: 'url-loader?limit=8192&name=[name].[hash:8].[ext]&outputPath='+webpackFile.resource+'/'
-			},
-			{
-				test: /\.swf$/,
-				loader: 'file?name=js/[name].[ext]'
 			},
 		]
 	}
@@ -119,16 +152,7 @@ const getHtml = {
 		chunksSortMode: 'dependency'
 };
 //配置页面
-// const htmlArray = [{
-// 	_html: 'index',
-// 	title: '首页',
-// 	chunks: ['*']//页面用到的vendor模块
-//    },
-// ];
-//自动生成html模板
-// htmlArray.forEach((element) => {
 	config.plugins.push(new HtmlWebpackPlugin(getHtml));
-// })
 
 /*清除dist文件夹*/
 config.plugins.push(new cleanWebpackPlugin([webpackFile.proDirectory],{

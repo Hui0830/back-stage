@@ -7,7 +7,9 @@ axios.interceptors.request.use(function (config) {
     const token = localStorage.getItem('token');
     config.headers.common['Authorization'] = 'Bearer ' + token;
     if(/^[\/api]/gi.test(config.url)) {
-      config.url = `http://localhost:3000${config.url}`
+      console.log(config);
+      config.url = `http://106.12.132.188:3000${config.url}`;
+      // config.url = `http://localhost:3000${config.url}`
     }
     return config;
   }, function (error) {
@@ -18,6 +20,7 @@ axios.interceptors.request.use(function (config) {
 axios.interceptors.response.use(function (response) {
     return response;
   }, function (error) {
+    console.log(error)
     const { code, msg } = error.response.data;
     if(code && code === responseCode.NO_LOGIN) {
         window.location.href = '/#/login';

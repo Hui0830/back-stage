@@ -7,9 +7,9 @@ module.exports = {
     entry: {
         // 将React相关模块放入一个动态链接库
         react: ['react','react-dom','react-router-dom','react-loadable'],
-        librarys: ['wangeditor','antd'],
+        // librarys: ['wangeditor','antd'],
         // antd: ['antd'],
-        utils: ['axios','js-cookie']
+        utils: ['axios','js-cookie','wangeditor']
     },
     output: {
         filename: '[name]-dll.js',

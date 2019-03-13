@@ -18,6 +18,13 @@
     margin-left: 10px;
     color: #ffffff;
 }
+.staff-td {
+    min-width: 150px;
+    text-align: center;
+}
+.ant-table-thead .staff-td {
+    text-align: center;
+}
 // 左右行内布局
 .row {
     line-height: 20px;

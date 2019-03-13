@@ -4,7 +4,7 @@ import React from 'react';
 import { addImgClasses,putImgClasses, deleteImgClass } from 'Api/stuff'
 
 import { style } from './index.scss';
-import TreeClass from '../../../components/tree_class';
+import TreeClass from 'components/tree_class';
 
 const StuffAside = ({data, getImgList}) => {
     return (

@@ -10,7 +10,5 @@
         "libraryDirectory": "es",
         "style": "css"
       }],
-      "transform-react-jsx-source",
-      "syntax-dynamic-import"
   ]
 }

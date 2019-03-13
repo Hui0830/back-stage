@@ -9,7 +9,7 @@
     "build:dll": "webpack --progress --colors --config ./webpack.dll.config.js",
     "server": "pm2-dev start ecosystem.config.js",
     "server:setup": "pm2 deploy ecosystem.config.js production setup",
-    "server:run": "npm run server:setup && pm2 deploy ecosystem.config.js production",
+    "server:publish:first": "npm run server:setup && pm2 deploy ecosystem.config.js production",
     "server:publish": "pm2 deploy ecosystem.config.js production",
     "createTestData": "node ./server/create_test_data.js"
   },
